@@ -1,0 +1,494 @@
+/* =============================================
+   LOGIN PAGE — SCHOOLIFY
+   ============================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+/* ---------- Reset & Root ---------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --purple: #3f36f3;
+    --teal: #63f1d5;
+    --purple-light: #8b85ff;
+    --teal-light: #6ddfc9;
+    --bg-dark: #171d41;
+    --bg-card: rgba(255, 255, 255, 0.04);
+    --border: rgba(255, 255, 255, 0.1);
+    --text-primary: #f0f2ff;
+    --text-secondary: rgba(240, 242, 255, 0.55);
+    --error: #ff6b8a;
+    --input-bg: rgba(255, 255, 255, 0.06);
+    --input-focus: rgba(108, 99, 255, 0.25);
+    --radius-card: 24px;
+    --radius-input: 12px;
+    --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Root Container ---------- */
+.login-root {
+    font-family: "Inter", sans-serif;
+    min-height: 100vh;
+    background-color: var(--bg-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ---------- Animated Background Blobs ---------- */
+.blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    animation: blobFloat 8s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.blob-1 {
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, #6c63ff, #9b59b6);
+    top: -120px;
+    left: -140px;
+    animation-duration: 10s;
+}
+
+.blob-2 {
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, #48c9b0, #1abc9c);
+    bottom: -100px;
+    right: -100px;
+    animation-duration: 13s;
+    animation-delay: -4s;
+}
+
+.blob-3 {
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, #f39c12, #e74c3c);
+    bottom: 20%;
+    left: 10%;
+    animation-duration: 16s;
+    animation-delay: -8s;
+    opacity: 0.1;
+}
+
+@keyframes blobFloat {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(30px, -20px) scale(1.04);
+    }
+
+    100% {
+        transform: translate(-20px, 30px) scale(0.97);
+    }
+}
+
+/* ---------- Card ---------- */
+.login-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 440px;
+    background: var(--bg-card);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding: 44px 40px 36px;
+    box-shadow:
+        0 0 0 1px rgba(108, 99, 255, 0.12),
+        0 32px 80px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    animation: cardIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ---------- Brand / Logo ---------- */
+.login-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+}
+
+.brand-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow:
+        0 0 0 1px rgba(108, 99, 255, 0.4),
+        0 12px 32px rgba(108, 99, 255, 0.3);
+    animation: iconPulse 3s ease-in-out infinite;
+}
+
+.brand-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+@keyframes iconPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(108, 99, 255, 0.5), 0 12px 32px rgba(108, 99, 255, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 0 8px rgba(108, 99, 255, 0), 0 12px 32px rgba(108, 99, 255, 0.5);
+    }
+}
+
+.brand-name {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--purple-light) 0%, var(--teal-light) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+}
+
+.brand-tagline {
+    font-size: 12.5px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: 0.3px;
+}
+
+/* ---------- Divider ---------- */
+.login-divider {
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(108, 99, 255, 0.4) 40%,
+            rgba(72, 201, 176, 0.4) 60%,
+            transparent);
+    margin-bottom: 28px;
+}
+
+/* ---------- Form ---------- */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ---------- Field Group ---------- */
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.2px;
+    transition: color var(--transition);
+}
+
+.field-group:focus-within .field-label {
+    color: var(--purple-light);
+}
+
+.field-group.field-error .field-label {
+    color: var(--error);
+}
+
+/* ---------- Input Wrapper ---------- */
+.field-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.field-icon {
+    position: absolute;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+    color: var(--text-secondary);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition);
+    z-index: 1;
+}
+
+.field-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.field-group:focus-within .field-icon {
+    color: var(--purple-light);
+}
+
+.field-input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-input);
+    padding: 12px 14px 12px 44px;
+    font-family: "Inter", sans-serif;
+    font-size: 14.5px;
+    font-weight: 400;
+    color: var(--text-primary);
+    outline: none;
+    transition:
+        border-color var(--transition),
+        background var(--transition),
+        box-shadow var(--transition);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.field-input::placeholder {
+    color: rgba(240, 242, 255, 0.28);
+}
+
+.field-input:focus {
+    border-color: var(--purple);
+    background: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+}
+
+.field-group.field-error .field-input {
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(255, 107, 138, 0.12);
+}
+
+/* ---------- Select ---------- */
+.field-select {
+    cursor: pointer;
+    padding-right: 44px;
+}
+
+.field-select option {
+    background: #1a1c2e;
+    color: var(--text-primary);
+}
+
+.field-select.placeholder-active {
+    color: rgba(240, 242, 255, 0.28);
+}
+
+.select-arrow {
+    position: absolute;
+    right: 14px;
+    width: 18px;
+    height: 18px;
+    color: var(--text-secondary);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition), transform var(--transition);
+}
+
+.select-arrow svg {
+    width: 100%;
+    height: 100%;
+}
+
+.field-group:focus-within .select-arrow {
+    color: var(--purple-light);
+    transform: rotate(180deg);
+}
+
+/* ---------- Password Toggle ---------- */
+.field-toggle {
+    position: absolute;
+    right: 14px;
+    width: 20px;
+    height: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition);
+    padding: 0;
+}
+
+.field-toggle svg {
+    width: 100%;
+    height: 100%;
+}
+
+.field-toggle:hover {
+    color: var(--text-primary);
+}
+
+/* ---------- Error Message ---------- */
+.field-error-msg {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--error);
+    letter-spacing: 0.2px;
+    animation: errorIn 0.2s ease both;
+}
+
+@keyframes errorIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- Submit Button ---------- */
+.login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 24px;
+    margin-top: 4px;
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    border: none;
+    border-radius: var(--radius-input);
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition:
+        opacity var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
+    box-shadow: 0 8px 32px rgba(108, 99, 255, 0.35);
+    letter-spacing: 0.2px;
+}
+
+.login-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.login-btn:hover:not(:disabled)::before {
+    opacity: 1;
+}
+
+.login-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 40px rgba(108, 99, 255, 0.45);
+}
+
+.login-btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 6px 20px rgba(108, 99, 255, 0.3);
+}
+
+.login-btn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.login-btn-icon {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition);
+}
+
+.login-btn-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.login-btn:hover:not(:disabled) .login-btn-icon {
+    transform: translateX(4px);
+}
+
+/* ---------- Auth Switch ---------- */
+.auth-switch {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.auth-switch button {
+    background: none;
+    border: none;
+    color: var(--purple-light);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color var(--transition);
+}
+
+.auth-switch button:hover {
+    color: var(--teal-light);
+    text-decoration: underline;
+}
+
+/* ---------- Footer ---------- */
+.login-footer {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(240, 242, 255, 0.22);
+    letter-spacing: 0.3px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 36px 24px 28px;
+        border-radius: 20px;
+    }
+
+    .brand-name {
+        font-size: 24px;
+    }
+}
