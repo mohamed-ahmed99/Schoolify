@@ -4,6 +4,11 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import mongoose from 'mongoose'
 
+
+// routes
+import authRoutes from './routes/auth.routes.js'
+import developmentRoutes from './routes/development.routes.js'
+
 const app = express()
 
 dotenv.config()
@@ -47,7 +52,8 @@ app.get('/', (req, res) => {
 
 
 // routes
-
+app.use("/api/auth", authRoutes)
+app.use("/api/dev", developmentRoutes)
 
 // not found routes
 app.use((req, res) => {
