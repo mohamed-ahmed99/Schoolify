@@ -33,3 +33,4 @@ export const createSchoolAccount = asyncHandler(async (req, res) => {
     })
 })
 
+
