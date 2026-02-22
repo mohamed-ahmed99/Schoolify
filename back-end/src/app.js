@@ -9,6 +9,7 @@ import mongoose from 'mongoose'
 import authRoutes from './routes/auth.routes.js'
 import developmentRoutes from './routes/development.routes.js'
 import schoolRoutes from './routes/school.routes.js'
+import usersRoutes from './routes/users.routes.js'
 
 const app = express()
 
@@ -56,6 +57,7 @@ app.get('/', (req, res) => {
 app.use("/api/auth", authRoutes)
 app.use("/api/dev", developmentRoutes)
 app.use("/api/schools", schoolRoutes)
+app.use("/api/users", usersRoutes)
 
 // not found routes
 app.use((req, res) => {

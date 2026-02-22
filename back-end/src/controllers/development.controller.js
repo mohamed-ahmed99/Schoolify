@@ -22,10 +22,13 @@ export const createSchoolAccount = asyncHandler(async (req, res) => {
     if (!headTeacher) throw new Error("HeadTeacher creation failed")
 
     // 4️ Assign headTeacher._id to school administration
-    req.body.school.administration.headTeacher = headTeacher._id
+    req.body.school.administration.headTeacher = user._id
 
     // 5️ Create the School
     const school = await SchoolModel.create(req.body.school)
+
+    user.school = school._id
+    await user.save()
 
     res.status(201).json({
         status: "success",

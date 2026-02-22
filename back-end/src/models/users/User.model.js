@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
   },
 
   // === School Info ===
-  school: { type: mongoose.Schema.Types.ObjectId, ref: "schools" }, // optional
+  school: { type: mongoose.Schema.Types.ObjectId, ref: "schools" }, 
 
 }, { timestamps: true });
 
