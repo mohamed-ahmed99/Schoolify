@@ -1,21 +1,41 @@
 import mongoose from "mongoose";
-import { ROLES } from "../../utils/constants";
+import { ROLES } from "../../utils/constants.js";
 
 const userSchema = new mongoose.Schema({
 
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true, unique: true, index:true },
-  password: { type: String, required: true },
-
-  role: { 
-    type: String, 
-    enum: Object.values(ROLES), 
-    required: true 
+  // === Personal Info ===
+  personalInfo: {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    avatar: { type: String },      
+    age: { type: Number },
+    bio: { type: String },
+    birthDay: { type: String },
   },
 
-  school: { type: mongoose.Schema.Types.ObjectId, ref: "School" }, // optional
-  region: { type: mongoose.Schema.Types.ObjectId, ref: "Region" }  // optional
+  // === Contact Info ===
+  contact: {
+    phoneNumber: { type: String },
+    email: { type: String, required: true, unique: true, index:true },
+    address: {
+      country: { type: String },
+      governorate: { type: String },
+      city: { type: String },
+      street: { type: String },
+    },
+  },
+
+  // === Account Info ===
+  account: {
+    password: { type: String, required: true, select:false },
+    role: { type: String, enum: Object.values(ROLES), required: true },
+    isActive: { type: Boolean, default: true },
+  },
+
+  // === School Info ===
+  school: { type: mongoose.Schema.Types.ObjectId, ref: "schools" }, // optional
+
 }, { timestamps: true });
 
-export default mongoose.model("users", userSchema);
+const UsersModel = mongoose.model("users", userSchema);
+export default UsersModel;

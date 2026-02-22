@@ -60,6 +60,6 @@ const schoolSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-const SchoolModel = mongoose.model("School", schoolSchema)
+const SchoolModel = mongoose.model("schools", schoolSchema)
 export default SchoolModel
 
