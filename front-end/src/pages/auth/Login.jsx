@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import schoolifyLogo from "../../assets/schoolify_logo_transparent (1).png";
 import "./Login.css";
 
 const staggerContainer = {
@@ -59,45 +60,18 @@ export default function Login({ onSwitch }) {
 
             <motion.div
                 className="login-card"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
             >
-                <motion.div
-                    className="login-brand"
-                    variants={staggerContainer}
-                    initial="initial"
-                    animate="animate"
-                >
-                    <motion.div className="brand-icon" variants={fadeInUp}>
-                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="40" height="40" rx="12" fill="url(#brandGrad)" />
-                            <path
-                                d="M20 8L32 15V25L20 32L8 25V15L20 8Z"
-                                fill="white"
-                                fillOpacity="0.9"
-                            />
-                            <path d="M20 8L20 32" stroke="white" strokeOpacity="0.4" strokeWidth="1.5" />
-                            <path d="M8 15L32 25" stroke="white" strokeOpacity="0.4" strokeWidth="1.5" />
-                            <path d="M32 15L8 25" stroke="white" strokeOpacity="0.4" strokeWidth="1.5" />
-                            <defs>
-                                <linearGradient id="brandGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                                    <stop stopColor="var(--purple)" />
-                                    <stop offset="1" stopColor="var(--teal)" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                    </motion.div>
-                    <motion.h1 className="brand-name" variants={fadeInUp}>Schoolify</motion.h1>
-                    <motion.p className="brand-tagline" variants={fadeInUp}>Welcome Back! Please login to your account.</motion.p>
-                </motion.div>
+                <div className="login-brand">
+                    <div className="brand-icon">
+                        <div className="brand-icon-inner">
+                            <img src={schoolifyLogo} alt="Schoolify Logo" style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
+                        </div>
+                    </div>
+                    <h1 className="brand-name">Schoolify</h1>
+                    <p className="brand-tagline">The future of school management.</p>
+                </div>
 
-                <motion.div
-                    className="login-divider"
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ delay: 0.5, duration: 0.8 }}
-                />
+                <div className="login-divider" />
 
                 <motion.form
                     className="login-form"
