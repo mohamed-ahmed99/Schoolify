@@ -1,0 +1,344 @@
+/* ════════════════════════════════════════════════════
+   SCHOOL PROFILE  ·  CSS
+   ════════════════════════════════════════════════════ */
+
+.sp-page {
+    background-color: var(--bg-primary);
+    min-height: 100vh;
+    padding-bottom: 80px;
+}
+
+.sp-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+}
+
+/* ── Top Nav ── */
+.sp-nav-bar {
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 0;
+    position: sticky;
+    top: 70px;
+    /* Below Navbar */
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.sp-back-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.sp-back-btn:hover {
+    color: var(--accent-primary);
+}
+
+/* ── Header ── */
+.sp-header {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    overflow: hidden;
+    margin-top: 32px;
+    margin-bottom: 40px;
+}
+
+.sp-cover-gradient {
+    height: 150px;
+    background: linear-gradient(135deg, #1a1152 0%, #3f36f3 100%);
+    position: relative;
+}
+
+.sp-header-content {
+    padding: 40px 40px 40px;
+    display: flex;
+    align-items: flex-end;
+    gap: 32px;
+}
+
+.sp-logo-container {
+    width: 140px;
+    height: 140px;
+    background: var(--bg-primary);
+    border: 4px solid var(--bg-secondary);
+    border-radius: 24px;
+    margin-top: -60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+}
+
+.sp-main-logo {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+}
+
+.sp-identity {
+    flex-grow: 1;
+    padding-bottom: 8px;
+}
+
+.sp-title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 4px;
+}
+
+.sp-school-name {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.sp-tag {
+    background: rgba(63, 54, 243, 0.1);
+    color: var(--accent-primary);
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sp-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.sp-header-actions {
+    display: flex;
+    gap: 12px;
+    padding-bottom: 8px;
+}
+
+.sp-btn-primary {
+    background: var(--accent-primary);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(63, 54, 243, 0.3);
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.sp-btn-primary:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.sp-btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sp-btn-outline:hover {
+    border-color: var(--text-primary);
+    background: var(--bg-primary);
+}
+
+/* ── Main Grid ── */
+.sp-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 40px;
+}
+
+.sp-section {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 32px;
+}
+
+.sp-sec-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    position: relative;
+    display: inline-block;
+}
+
+.sp-sec-title::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: var(--accent-primary);
+    border-radius: 2px;
+}
+
+.sp-full-desc {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.sp-programs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 12px;
+}
+
+.sp-prog-card {
+    display: flex;
+    gap: 16px;
+}
+
+.sp-prog-icon {
+    font-size: 1.4rem;
+    color: var(--accent-primary);
+    background: rgba(63, 54, 243, 0.1);
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.sp-prog-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.sp-prog-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ── Sidebar ── */
+.sp-sidebar-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 24px;
+}
+
+.sp-side-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+.sp-side-stat {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.sp-side-stat:last-child {
+    margin-bottom: 0;
+}
+
+.sp-side-stat svg {
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+    opacity: 0.8;
+}
+
+.sp-side-stat strong {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+.sp-side-stat span {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.sp-contact-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.sp-contact-link svg {
+    color: var(--accent-primary);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .sp-main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sp-header-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .sp-logo-container {
+        margin-top: -70px;
+    }
+
+    .sp-header-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .sp-title-row {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 640px) {
+    .sp-container {
+        padding: 0 16px;
+    }
+
+    .sp-programs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sp-header-actions {
+        flex-direction: column;
+    }
+
+    .sp-btn-primary,
+    .sp-btn-outline {
+        width: 100%;
+    }
+}

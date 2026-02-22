@@ -1,0 +1,263 @@
+.sl-page {
+    padding: 80px 0;
+    background-color: var(--bg-primary);
+    min-height: 100vh;
+}
+
+.sl-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+}
+
+.sl-header {
+    max-width: 640px;
+    margin-bottom: 60px;
+}
+
+.sl-overline {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--accent-primary);
+    margin-bottom: 12px;
+    display: block;
+}
+
+.sl-h1 {
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+}
+
+.sl-accent {
+    color: var(--accent-primary);
+}
+
+.sl-sub {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* List Layout - Full Width Rows */
+.sl-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Card Styling - Horizontal Layout */
+.sl-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: row;
+    min-height: 180px;
+}
+
+.sl-card:hover {
+    transform: translateX(8px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border-color: var(--accent-primary);
+}
+
+/* Vertical ribbon instead of top banner */
+.sl-card-banner {
+    width: 12px;
+    background: linear-gradient(180deg, #3f36f3 0%, #63f1d5 100%);
+    flex-shrink: 0;
+    position: relative;
+}
+
+.sl-type-tag {
+    display: none;
+    /* Hide or move if needed, keeping it clean for now */
+}
+
+.sl-card-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+    flex-grow: 1;
+}
+
+/* Smaller Logo Box */
+.sl-logo-wrap {
+    width: 150px;
+    height: 100%;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin: 0;
+    /* Removed negative margin */
+}
+
+.sl-school-logo {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+}
+
+.sl-card-info-main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sl-school-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.sl-school-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+.sl-school-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 8px 0 0;
+    max-width: 500px;
+}
+
+.sl-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 24px;
+    border-left: 1px solid var(--border-color);
+    border-top: none;
+    margin: 0;
+    min-width: 180px;
+}
+
+.sl-stat {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sl-stat-icon {
+    width: 28px;
+    height: 28px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-primary);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+}
+
+.sl-stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.sl-stat-val {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.sl-stat-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sl-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 12px;
+}
+
+.sl-view-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.sl-view-btn:hover {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: #fff;
+}
+
+/* Tablet Optimizations */
+@media (max-width: 1024px) {
+    .sl-card-body {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sl-stats {
+        flex-direction: row;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+        padding: 16px 0 0;
+        width: 100%;
+    }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+    .sl-page {
+        padding: 40px 0;
+    }
+
+    .sl-container {
+        padding: 0 16px;
+    }
+
+    .sl-card {
+        flex-direction: column;
+    }
+
+    .sl-card-banner {
+        width: 100%;
+        height: 6px;
+    }
+
+    .sl-logo-wrap {
+        width: 48px;
+        height: 48px;
+    }
+}

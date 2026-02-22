@@ -1,19 +1,33 @@
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
-import { FaSun, FaMoon, FaGraduationCap } from 'react-icons/fa';
+import { FaSun, FaMoon } from 'react-icons/fa';
+import schoolifyLogo from '../assets/schoolify_logo_transparent (1).png';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ onNavigate }) => {
     const { theme, toggleTheme } = useTheme();
 
     return (
         <nav className="navbar">
             <div className="navbar-container">
-                <div className="navbar-logo">
-                    <FaGraduationCap className="logo-icon" />
+                {/* Logo */}
+                <div className="navbar-logo" onClick={() => onNavigate('home')}>
+                    <img src={schoolifyLogo} alt="Schoolify Logo" className="navbar-logo-img" />
                     <span>Schoolify</span>
                 </div>
+
+                {/* Nav links */}
+                <div className="navbar-links">
+                    <button className="nav-link" onClick={() => onNavigate('home')}>Home</button>
+                    <button className="nav-link" onClick={() => onNavigate('schools')}>Schools</button>
+                    <button className="nav-link" onClick={() => onNavigate('login')}>Portal</button>
+                </div>
+
+                {/* Actions */}
                 <div className="navbar-actions">
+                    <button className="btn-join" onClick={() => onNavigate('register')}>
+                        Get Started
+                    </button>
                     <button
                         className="theme-toggle"
                         onClick={toggleTheme}
