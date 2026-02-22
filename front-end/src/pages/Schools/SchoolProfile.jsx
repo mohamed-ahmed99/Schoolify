@@ -11,6 +11,8 @@ export default function SchoolProfile({ school, onBack }) {
     // If no school is provided (shouldn't happen with proper logic), show a fallback
     if (!school) return null;
 
+    const { identity, contact, stats, administration } = school;
+
     return (
         <div className="sp-page">
             {/* ── Top Navigation / Back button ── */}
@@ -32,15 +34,15 @@ export default function SchoolProfile({ school, onBack }) {
                         </div>
                         <div className="sp-identity">
                             <div className="sp-title-row">
-                                <h1 className="sp-school-name">{school.name}</h1>
-                                <span className="sp-tag">{school.type}</span>
+                                <h1 className="sp-school-name">{identity.name}</h1>
+                                <span className="sp-tag">{administration?.educationalStage || 'General'}</span>
                             </div>
                             <p className="sp-location">
-                                <FaMapMarkerAlt /> {school.location}
+                                <FaMapMarkerAlt /> {contact?.address?.city || 'Unknown City'}, {contact?.address?.country || 'Unknown Country'}
                             </p>
                         </div>
                         <div className="sp-header-actions">
-                            
+
                             <button className="sp-btn-outline">Contact Admin</button>
                         </div>
                     </div>
@@ -52,7 +54,9 @@ export default function SchoolProfile({ school, onBack }) {
                     <div className="sp-content-col">
                         <section className="sp-section">
                             <h2 className="sp-sec-title">About the Institution</h2>
-                            <p className="sp-full-desc">{school.description}</p>
+                            <p className="sp-full-desc">
+                                {identity.description || "Detailed description for this institution is currently being updated. Schoolify ensures that all registered schools maintain a high standard of educational excellence and community involvement."}
+                            </p>
                         </section>
 
                         <section className="sp-section">
@@ -61,22 +65,22 @@ export default function SchoolProfile({ school, onBack }) {
                                 <div className="sp-prog-card">
                                     <FaBook className="sp-prog-icon" />
                                     <div>
-                                        <h3>Advanced Curriculum</h3>
-                                        <p>Standardized international curriculum focused on critical thinking.</p>
+                                        <h3>Curriculum Focus</h3>
+                                        <p>Comprehensive {administration?.educationalStage || 'K-12'} curriculum designed for academic rigour.</p>
                                     </div>
                                 </div>
                                 <div className="sp-prog-card">
                                     <FaAward className="sp-prog-icon" />
                                     <div>
-                                        <h3>Excellence Awards</h3>
-                                        <p>Recognized for outstanding academic performance since 2018.</p>
+                                        <h3>Quality Assurance</h3>
+                                        <p>State-verified and certified by Schoolify's quality control board.</p>
                                     </div>
                                 </div>
                                 <div className="sp-prog-card">
                                     <FaShieldAlt className="sp-prog-icon" />
                                     <div>
-                                        <h3>Safety First</h3>
-                                        <p>Secure campus with modern surveillance and health protocols.</p>
+                                        <h3>Secure Environment</h3>
+                                        <p>Modernized campus facilities with advanced safety and health protocols.</p>
                                     </div>
                                 </div>
                             </div>
@@ -86,26 +90,26 @@ export default function SchoolProfile({ school, onBack }) {
                     {/* Right Column: Stats & Contact */}
                     <div className="sp-side-col">
                         <div className="sp-sidebar-card sp-stats-card">
-                            <h3 className="sp-side-title">Quick Stats</h3>
+                            <h3 className="sp-side-title">Live Stats</h3>
                             <div className="sp-side-stat">
                                 <FaUserGraduate />
                                 <div>
-                                    <strong>{school.students}</strong>
+                                    <strong>{stats?.totalStudents || 0}</strong>
                                     <span>Total Students</span>
                                 </div>
                             </div>
                             <div className="sp-side-stat">
                                 <FaChalkboardTeacher />
                                 <div>
-                                    <strong>{school.teachers}</strong>
+                                    <strong>{stats?.totalTeachers || 0}</strong>
                                     <span>Expert Teachers</span>
                                 </div>
                             </div>
                             <div className="sp-side-stat">
                                 <FaCalendarAlt />
                                 <div>
-                                    <strong>Sept 15</strong>
-                                    <span>Next Semester</span>
+                                    <strong>Active</strong>
+                                    <span>Current Status</span>
                                 </div>
                             </div>
                         </div>
@@ -113,14 +117,18 @@ export default function SchoolProfile({ school, onBack }) {
                         <div className="sp-sidebar-card sp-contact-card">
                             <h3 className="sp-side-title">Contact Information</h3>
                             <div className="sp-contact-link">
-                                <FaPhone /> <span>+20 123 456 7890</span>
+                                <FaEnvelope /> <span>{contact.email}</span>
                             </div>
-                            <div className="sp-contact-link">
-                                <FaEnvelope /> <span>info@{school.name.toLowerCase().replace(/\s/g, '')}.edu</span>
-                            </div>
-                            <div className="sp-contact-link">
-                                <FaGlobe /> <span>www.{school.name.toLowerCase().replace(/\s/g, '')}.edu</span>
-                            </div>
+                            {contact.phone && (
+                                <div className="sp-contact-link">
+                                    <FaPhone /> <span>{contact.phone}</span>
+                                </div>
+                            )}
+                            {contact.website && (
+                                <div className="sp-contact-link">
+                                    <FaGlobe /> <span>{contact.website}</span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

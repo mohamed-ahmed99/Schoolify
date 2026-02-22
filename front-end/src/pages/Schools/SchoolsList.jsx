@@ -1,66 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaUserGraduate, FaChalkboardTeacher, FaMapMarkerAlt, FaArrowRight } from 'react-icons/fa';
 import schoolifyLogo from '../../assets/schoolify_logo_transparent (1).png';
 import './SchoolsList.css';
 
-const MOCK_SCHOOLS = [
-    {
-        id: 1,
-        name: "كايرووووو International School",
-        description: "هوهوهوهو ماااااااء",
-        students: "2,480",
-        teachers: "164",
-        location: "Cairo, Egypt",
-        type: "International"
-    },
-    {
-        id: 2,
-        name: "الشهيد احمد راضي",
-        description: "اوسخ مدرسه فيكي يا مصر",
-        students: "3,150",
-        teachers: "210",
-        location: "القلج",
-        type: "Private"
-    },
-    {
-        id: 3,
-        name: "Alexandria STEM School",
-        description: "Specialized in Science, Technology, Engineering, and Mathematics to prepare the next generation of innovators.",
-        students: "1,200",
-        teachers: "85",
-        location: "Alexandria, Egypt",
-        type: "Government"
-    },
-    {
-        id: 4,
-        name: "مضاميضووووو",
-        description: "مدرستييييي اللي هقدم فيها عبث من العياb,frpljhmnk,b.gtf'Chgk,bgh,ggg,g,g,gg,g,g,,,gg,g,g,g,gg,g,g,g,g,gg,g,g,g,gر الثقييييل",
-        students: "1,850",
-        teachers: "125",
-        location: "hohohohohohhoho",
-        type: "Private"
-    },
-    {
-        id: 5,
-        name: "mohamonmvme",
-        description: "mbplkfsd;bkv[hgkvlopkhgvl,od'golv;-p[d]oglvp=[e]dgkblvrp].",
-        students: "950",
-        teachers: "70",
-        location: "nmgivkvdmvkdlv",
-        type: "International"
-    },
-    {
-        id: 6,
-        name: "bfdl;br,fpls;",
-        description: "m,bgmvdpdkvvvodggjr",
-        students: "1,400",
-        teachers: "95",
-        location: "bmvfblvmdflfk",
-        type: "Vocational"
-    }
-];
-
 export default function SchoolsList({ onViewProfile }) {
+    const [schools, setSchools] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchSchools = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch('http://localhost:5150/api/schools/get?limit=20&page=1');
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    setSchools(result.data.schools);
+                } else {
+                    setError(result.message || "Failed to fetch schools");
+                }
+            } catch (err) {
+                setError("Could not connect to the server. Please ensure the backend is running.");
+                console.error("Fetch error:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSchools();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="sl-page">
+                <div className="sl-container">
+                    <div className="sl-loading">
+                        <div className="sl-spinner"></div>
+                        <p>Loading schools...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="sl-page">
+                <div className="sl-container">
+                    <div className="sl-error">
+                        <p>{error}</p>
+                        <button onClick={() => window.location.reload()} className="sl-view-btn">Try Again</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="sl-page">
             <div className="sl-container">
@@ -71,49 +67,61 @@ export default function SchoolsList({ onViewProfile }) {
                 </header>
 
                 <div className="sl-grid">
-                    {MOCK_SCHOOLS.map(school => (
-                        <div key={school.id} className="sl-card">
-                            <div className="sl-card-banner"></div>
-                            <div className="sl-card-body">
-                                <div className="sl-logo-wrap">
-                                    <img src={schoolifyLogo} alt="School Logo" className="sl-school-logo" />
-                                </div>
-                                <div className="sl-card-info-main">
-                                    <h2 className="sl-school-name">{school.name}</h2>
-                                    <p className="sl-school-location">
-                                        <FaMapMarkerAlt /> {school.location}
-                                    </p>
-                                    <p className="sl-school-desc">{school.description}</p>
-                                </div>
+                    {schools.length > 0 ? (
+                        schools.map(school => (
+                            <div key={school._id} className="sl-card">
+                                <div className="sl-card-banner"></div>
+                                <div className="sl-card-body">
+                                    <div className="sl-logo-wrap">
+                                        <img
+                                            src={schoolifyLogo}
+                                            alt="School Logo"
+                                            className="sl-school-logo"
+                                        />
+                                    </div>
+                                    <div className="sl-card-info-main">
+                                        <h2 className="sl-school-name">{school.identity.name}</h2>
+                                        <p className="sl-school-location">
+                                            <FaMapMarkerAlt /> {school.contact?.address?.city || 'Unknown City'}, {school.contact?.address?.country || 'Unknown Country'}
+                                        </p>
+                                        <p className="sl-school-desc">
+                                            {school.identity.description || "No description available for this institution."}
+                                        </p>
+                                    </div>
 
-                                <div className="sl-stats">
-                                    <div className="sl-stat">
-                                        <span className="sl-stat-icon"><FaUserGraduate /></span>
-                                        <div className="sl-stat-info">
-                                            <span className="sl-stat-val">{school.students}</span>
-                                            <span className="sl-stat-label">Students</span>
+                                    <div className="sl-stats">
+                                        <div className="sl-stat">
+                                            <span className="sl-stat-icon"><FaUserGraduate /></span>
+                                            <div className="sl-stat-info">
+                                                <span className="sl-stat-val">{school.stats?.totalStudents || 0}</span>
+                                                <span className="sl-stat-label">Students</span>
+                                            </div>
+                                        </div>
+                                        <div className="sl-stat">
+                                            <span className="sl-stat-icon"><FaChalkboardTeacher /></span>
+                                            <div className="sl-stat-info">
+                                                <span className="sl-stat-val">{school.stats?.totalTeachers || 0}</span>
+                                                <span className="sl-stat-label">Teachers</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="sl-stat">
-                                        <span className="sl-stat-icon"><FaChalkboardTeacher /></span>
-                                        <div className="sl-stat-info">
-                                            <span className="sl-stat-val">{school.teachers}</span>
-                                            <span className="sl-stat-label">Teachers</span>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div className="sl-actions">
-                                    <button
-                                        className="sl-view-btn"
-                                        onClick={() => onViewProfile(school)}
-                                    >
-                                        View Profile <FaArrowRight />
-                                    </button>
+                                    <div className="sl-actions">
+                                        <button
+                                            className="sl-view-btn"
+                                            onClick={() => onViewProfile(school)}
+                                        >
+                                            View Profile <FaArrowRight />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+                        ))
+                    ) : (
+                        <div className="sl-empty">
+                            <p>No schools found in the directory.</p>
                         </div>
-                    ))}
+                    )}
                 </div>
             </div>
         </div>
