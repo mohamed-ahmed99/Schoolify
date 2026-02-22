@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
 
   role: { 
     type: String, 
-    enum: [Object.values(ROLES)], 
+    enum: Object.values(ROLES), 
     required: true 
   },
 
@@ -18,4 +18,4 @@ const userSchema = new mongoose.Schema({
   region: { type: mongoose.Schema.Types.ObjectId, ref: "Region" }  // optional
 }, { timestamps: true });
 
-export default mongoose.model("User", userSchema);
+export default mongoose.model("users", userSchema);
