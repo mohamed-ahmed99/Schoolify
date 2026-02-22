@@ -1,5 +1,21 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import "./Login.css";
+
+const staggerContainer = {
+    initial: {},
+    animate: {
+        transition: {
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const fadeInUp = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.5 }
+};
 
 export default function Login({ onSwitch }) {
     const [form, setForm] = useState({ email: "", password: "" });
@@ -24,15 +40,36 @@ export default function Login({ onSwitch }) {
 
     return (
         <div className="login-root">
-            {/* Background blobs */}
-            <div className="blob blob-1" />
-            <div className="blob blob-2" />
-            <div className="blob blob-3" />
+            {/* Background blobs with floating animation */}
+            <motion.div
+                className="blob blob-1"
+                animate={{ scale: [1, 1.1, 1], rotate: [0, 90, 0] }}
+                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            />
+            <motion.div
+                className="blob blob-2"
+                animate={{ scale: [1, 1.2, 1], rotate: [0, -120, 0] }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            />
+            <motion.div
+                className="blob blob-3"
+                animate={{ scale: [1, 1.15, 1], y: [0, 50, 0] }}
+                transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+            />
 
-            <div className="login-card">
-                {/* Logo / Brand */}
-                <div className="login-brand">
-                    <div className="brand-icon">
+            <motion.div
+                className="login-card"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+            >
+                <motion.div
+                    className="login-brand"
+                    variants={staggerContainer}
+                    initial="initial"
+                    animate="animate"
+                >
+                    <motion.div className="brand-icon" variants={fadeInUp}>
                         <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect width="40" height="40" rx="12" fill="url(#brandGrad)" />
                             <path
@@ -50,21 +87,28 @@ export default function Login({ onSwitch }) {
                                 </linearGradient>
                             </defs>
                         </svg>
-                    </div>
-                    <h1 className="brand-name">Schoolify</h1>
-                    <p className="brand-tagline">Welcome Back! Please login to your account.</p>
-                </div>
+                    </motion.div>
+                    <motion.h1 className="brand-name" variants={fadeInUp}>Schoolify</motion.h1>
+                    <motion.p className="brand-tagline" variants={fadeInUp}>Welcome Back! Please login to your account.</motion.p>
+                </motion.div>
 
-                {/* Divider */}
-                <div className="login-divider" />
+                <motion.div
+                    className="login-divider"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.5, duration: 0.8 }}
+                />
 
-                {/* Form */}
-                <form className="login-form" onSubmit={handleSubmit} noValidate>
-                    {/* Email */}
-                    <div className={`field-group ${touched.email && !isEmailValid ? "field-error" : ""}`}>
-                        <label htmlFor="email" className="field-label">
-                            Email Address
-                        </label>
+                <motion.form
+                    className="login-form"
+                    onSubmit={handleSubmit}
+                    noValidate
+                    variants={staggerContainer}
+                    initial="initial"
+                    animate="animate"
+                >
+                    <motion.div className={`field-group ${touched.email && !isEmailValid ? "field-error" : ""}`} variants={fadeInUp}>
+                        <label htmlFor="email" className="field-label">Email Address</label>
                         <div className="field-input-wrap">
                             <span className="field-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -87,13 +131,10 @@ export default function Login({ onSwitch }) {
                         {touched.email && !isEmailValid && (
                             <span className="field-error-msg">Valid email required.</span>
                         )}
-                    </div>
+                    </motion.div>
 
-                    {/* Password */}
-                    <div className={`field-group ${touched.password && form.password.length < 6 ? "field-error" : ""}`}>
-                        <label htmlFor="password" className="field-label">
-                            Password
-                        </label>
+                    <motion.div className={`field-group ${touched.password && form.password.length < 6 ? "field-error" : ""}`} variants={fadeInUp}>
+                        <label htmlFor="password" className="field-label">Password</label>
                         <div className="field-input-wrap">
                             <span className="field-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -135,14 +176,16 @@ export default function Login({ onSwitch }) {
                         {touched.password && form.password.length < 6 && (
                             <span className="field-error-msg">Password too short.</span>
                         )}
-                    </div>
+                    </motion.div>
 
-                    {/* Submit */}
-                    <button
+                    <motion.button
                         id="login-submit-btn"
                         type="submit"
                         className="login-btn"
                         disabled={!isEmailValid || form.password.length < 6}
+                        variants={fadeInUp}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                     >
                         <span>Sign In</span>
                         <span className="login-btn-icon">
@@ -151,17 +194,17 @@ export default function Login({ onSwitch }) {
                                 <polyline points="12 5 19 12 12 19" />
                             </svg>
                         </span>
-                    </button>
-                </form>
+                    </motion.button>
+                </motion.form>
 
-                <div className="auth-switch">
+                <motion.div className="auth-switch" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
                     Don't have an account? <button onClick={onSwitch}>Create account</button>
-                </div>
+                </motion.div>
 
                 <p className="login-footer">
                     &copy; {new Date().getFullYear()} Schoolify.
                 </p>
-            </div>
+            </motion.div>
         </div>
     );
 }

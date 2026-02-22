@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { FaUserGraduate, FaChalkboardTeacher, FaMapMarkerAlt, FaArrowRight } from 'react-icons/fa';
 import schoolifyLogo from '../../assets/schoolify_logo_transparent (1).png';
 import './SchoolsList.css';
+
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+};
 
 export default function SchoolsList({ onViewProfile }) {
     const [schools, setSchools] = useState([]);
@@ -66,10 +82,21 @@ export default function SchoolsList({ onViewProfile }) {
                     <p className="sl-sub">Explore the diverse network of institutions that trust Schoolify to power their educational journey.</p>
                 </header>
 
-                <div className="sl-grid">
+                <motion.div
+                    className="sl-grid"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
                     {schools.length > 0 ? (
                         schools.map(school => (
-                            <div key={school._id} className="sl-card">
+                            <motion.div
+                                key={school._id}
+                                className="sl-card"
+                                variants={itemVariants}
+                                whileHover={{ y: -5, boxShadow: "0 10px 30px rgba(0,0,0,0.15)" }}
+                                transition={{ type: "spring", stiffness: 300 }}
+                            >
                                 <div className="sl-card-banner"></div>
                                 <div className="sl-card-body">
                                     <div className="sl-logo-wrap">
@@ -115,14 +142,14 @@ export default function SchoolsList({ onViewProfile }) {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))
                     ) : (
                         <div className="sl-empty">
                             <p>No schools found in the directory.</p>
                         </div>
                     )}
-                </div>
+                </motion.div>
             </div>
         </div>
     );
