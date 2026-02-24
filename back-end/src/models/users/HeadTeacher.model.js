@@ -1,25 +1,23 @@
 import mongoose from "mongoose";
 
-// اسكيما خاصة بالـ HeadTeacher
+// schema for head teacher
 const headTeacherSchema = new mongoose.Schema({
 
-  // ربط باليوزر العام
+  // link to user
   user: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "users", 
     required: true 
   },
 
-  // === Info ===
-  Info: {
+  // info
+  info: {
     yearsOfExperience: { type: Number, default: 0 },
     salary: { type: String }, 
     previousSubjects: { type: [String], default: [] }, 
     notes: { type: String, default: "" },
   },
 
-  
-  isActive: { type: Boolean, default: true },
 
 }, { timestamps: true });
 

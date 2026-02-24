@@ -10,16 +10,16 @@ import { ROLES } from "../utils/constants.js";
 
 // GET /api/users/profile/:id 
 export const getUserProfile = asyncHandler(async (req, res) => {
-    const { userId } = req.params;
+    const { id } = req.params;
 
 
-    const user = await UsersModel.findById(userId)
+    const user = await UsersModel.findById(id)
         .populate("school", "identity.name identity.logo");
 
     if (!user) {
         return res.status(404).json({
             status: "error",
-            message: `User with id ${userId} not found`,
+            message: `User with id ${id} not found`,
             data: null,
         });
     }
@@ -30,21 +30,21 @@ export const getUserProfile = asyncHandler(async (req, res) => {
 
     switch (userRole) {
         case ROLES.STUDENT:
-            profileData = await StudentProfile.findOne({ user: userId })
+            profileData = await StudentProfile.findOne({ user: id })
                 .populate("classes");
             break;
 
         case ROLES.TEACHER:
-            profileData = await TeacherProfile.findOne({ user: userId })
+            profileData = await TeacherProfile.findOne({ user: id })
                 .populate("classes");
             break;
 
         case ROLES.HEAD_TEACHER:
-            profileData = await HeadTeacherProfile.findOne({ user: userId });
+            profileData = await HeadTeacherProfile.findOne({ user: id });
             break;
 
         case ROLES.SCHOOL_ADMIN:
-            profileData = await SchoolAdminProfile.findOne({ user: userId })
+            profileData = await SchoolAdminProfile.findOne({ user: id })
                 .populate("managedSchools");
             break;
 

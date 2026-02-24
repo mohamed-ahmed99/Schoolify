@@ -3,7 +3,7 @@ import { ROLES } from "../../utils/constants.js";
 
 const userSchema = new mongoose.Schema({
 
-  // === Personal Info ===
+  // Personal Info
   personalInfo: {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
     birthDay: { type: String },
   },
 
-  // === Contact Info ===
+  // Contact Info
   contact: {
     phoneNumber: { type: String },
     email: { type: String, required: true, unique: true, index:true },
@@ -25,16 +25,19 @@ const userSchema = new mongoose.Schema({
     },
   },
 
-  // === Account Info ===
+  // Account Info
   account: {
     password: { type: String, required: true, select:false },
     role: { type: String, enum: Object.values(ROLES), required: true },
     isActive: { type: Boolean, default: true },
   },
 
-  // === School Info ===
+  // school info
   school: { type: mongoose.Schema.Types.ObjectId, ref: "schools" }, 
 
+  // status
+  isActive: { type: Boolean, default: true },
+  
 }, { timestamps: true });
 
 const UsersModel = mongoose.model("users", userSchema);

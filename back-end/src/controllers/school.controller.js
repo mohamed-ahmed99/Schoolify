@@ -17,3 +17,19 @@ export const getSchools = asyncHandler(async (req, res) => {
 
     res.status(200).json({status:"success", message:"", data:{schools}})
 })
+
+
+export const getSchoolById = asyncHandler(async (req, res) => {
+    const {id} = req.params
+
+    if (!id){
+        res.status(400).json({status:"fail", message:"id is required", data:null})
+    }
+
+    const school = await SchoolModel.findById(id)
+    if (!school){
+        res.status(404).json({status:"fail", message:"school not found", data:null})
+    }
+
+    res.status(200).json({status:"success", message:"", data:{school}})
+})
