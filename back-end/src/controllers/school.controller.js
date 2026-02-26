@@ -41,11 +41,7 @@ export const createSchool = asyncHandler(async (req, res) => {
     const { user, school } = req.body;
 
     if (!user || !school) {
-        return res.status(400).json({
-            status: "fail",
-            message: "headTeacher and school data are required",
-            data: null
-        });
+        return res.status(400).json({ status: "fail", message: "headTeacher and school data are required", data: null });
     }
 
     // hash password
@@ -59,13 +55,7 @@ export const createSchool = asyncHandler(async (req, res) => {
 
     // 2. Create School and link it to the User (Head Teacher)
     // We update the administration object to include the headTeacher id
-    const schoolData = {
-        ...school,
-        administration: {
-            ...school.administration,
-            headTeacher: newUser._id
-        }
-    };
+    const schoolData = { ...school, administration: { ...school.administration, headTeacher: newUser._id } };
     const newSchool = await SchoolModel.create(schoolData);
 
     // 3. Update User with the school ID
@@ -73,15 +63,8 @@ export const createSchool = asyncHandler(async (req, res) => {
     await newUser.save();
 
     // 4. Create HeadTeacher profile and link it to User
-    const headTeacher = {
-        ...user.headTeacher,
-        user: newUser._id
-    }
+    const headTeacher = { ...user.headTeacher, user: newUser._id }
     await HeadTeacherModel.create(headTeacher);
 
-    res.status(201).json({
-        status: "success",
-        message: "School and Head Teacher profile created successfully",
-        data: {}
-    });
+    res.status(201).json({ status: "success", message: "School and Head Teacher profile created successfully", data: {} });
 })

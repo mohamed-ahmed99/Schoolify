@@ -9,7 +9,7 @@ const studentProfileSchema = new mongoose.Schema({
   grade: { type: String, required: true },
   parentPhone: { type: String },
   attendanceRecord: [{ date: Date, status: String }],
-  classes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Class" }]
+  classes: { type: mongoose.Schema.Types.ObjectId, ref: "Class"},
 }, { timestamps: true });
 
 export default mongoose.model("StudentProfile", studentProfileSchema);

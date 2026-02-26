@@ -29,7 +29,6 @@ const userSchema = new mongoose.Schema({
   account: {
     password: { type: String, required: true, select:false },
     role: { type: String, enum: Object.values(ROLES), required: true },
-    isActive: { type: Boolean, default: true },
   },
 
   // school info
