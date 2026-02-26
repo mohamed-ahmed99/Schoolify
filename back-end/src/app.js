@@ -8,7 +8,7 @@ import mongoose from 'mongoose'
 // routes
 import authRoutes from './routes/auth.routes.js'
 import developmentRoutes from './routes/development.routes.js'
-import schoolRoutes from './routes/school.routes.js'
+import schoolRoutes from './routes/schools.routes.js'
 import usersRoutes from './routes/users.routes.js'
 
 const app = express()
