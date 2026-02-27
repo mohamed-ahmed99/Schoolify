@@ -12,6 +12,7 @@ const teacherProfileSchema = new mongoose.Schema({
   
 }, { timestamps: true });
 
-export default mongoose.model("TeacherProfile", teacherProfileSchema);
+const Teachers = mongoose.model("Teachers", teacherProfileSchema);
+export default Teachers
 
 

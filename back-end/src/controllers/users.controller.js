@@ -8,11 +8,11 @@ import { ROLES } from "../utils/constants.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 
 // models 
-import UsersModel from "../models/users/User.model.js";
-import StudentProfile from "../models/users/Student.model.js";
-import TeacherProfile from "../models/users/Teacher.model.js";
-import HeadTeacherProfile from "../models/users/HeadTeacher.model.js";
-import SchoolAdminProfile from "../models/users/SchoolAdmin.model.js";
+import Users from "../models/users/User.model.js";
+import Students from "../models/users/Student.model.js";
+import Teachers from "../models/users/Teacher.model.js";
+import HeadTeachers from "../models/users/HeadTeacher.model.js";
+import SchoolAdmins from "../models/users/SchoolAdmin.model.js";
 
 
 
@@ -21,7 +21,7 @@ export const getUserProfile = asyncHandler(async (req, res) => {
     const { id } = req.params;
 
 
-    const user = await UsersModel.findById(id)
+    const user = await Users.findById(id)
         .populate("school", "identity.name identity.logo");
 
     if (!user) {
@@ -38,21 +38,21 @@ export const getUserProfile = asyncHandler(async (req, res) => {
 
     switch (userRole) {
         case ROLES.STUDENT:
-            profileData = await StudentProfile.findOne({ user: id })
+            profileData = await Students.findOne({ user: id })
                 .populate("classes");
             break;
 
         case ROLES.TEACHER:
-            profileData = await TeacherProfile.findOne({ user: id })
+            profileData = await Teachers.findOne({ user: id })
                 .populate("classes");
             break;
 
         case ROLES.HEAD_TEACHER:
-            profileData = await HeadTeacherProfile.findOne({ user: id });
+            profileData = await HeadTeachers.findOne({ user: id });
             break;
 
         case ROLES.SCHOOL_ADMIN:
-            profileData = await SchoolAdminProfile.findOne({ user: id })
+            profileData = await SchoolAdmins.findOne({ user: id })
                 .populate("managedSchools");
             break;
 
@@ -84,26 +84,26 @@ export const createUser = asyncHandler(async (req, res) => {
     user.account.password = await bcrypt.hash(user.account.password, 10);
 
     // create user
-    const newUser = await UsersModel.create(user);
+    const newUser = await Users.create(user);
 
     // create role profile based on user role
     let profileData = null;
 
     switch (newUser.account.role) {
         case ROLES.STUDENT:
-            profileData = await StudentProfile.create({ ...profile, user: newUser._id });
+            profileData = await Students.create({ ...profile, user: newUser._id });
             break;
 
         case ROLES.TEACHER:
-            profileData = await TeacherProfile.create({ ...profile, user: newUser._id });
+            profileData = await Teachers.create({ ...profile, user: newUser._id });
             break;
 
         case ROLES.HEAD_TEACHER:
-            profileData = await HeadTeacherProfile.create({ ...profile, user: newUser._id });
+            profileData = await HeadTeachers.create({ ...profile, user: newUser._id });
             break;
 
         case ROLES.SCHOOL_ADMIN:
-            profileData = await SchoolAdminProfile.create({ ...profile, user: newUser._id });
+            profileData = await SchoolAdmins.create({ ...profile, user: newUser._id });
             break;
         default:
             // For roles like system_admin or others without specific profiles

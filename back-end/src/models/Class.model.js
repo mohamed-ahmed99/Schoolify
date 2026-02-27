@@ -8,4 +8,5 @@ const classSchema = new mongoose.Schema({
   school: { type: mongoose.Schema.Types.ObjectId, ref: "School" }
 }, { timestamps: true });
 
-export default mongoose.model("Class", classSchema);
+const Classes = mongoose.model("Classes", classSchema);
+export default Classes

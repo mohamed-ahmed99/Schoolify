@@ -12,4 +12,5 @@ const studentProfileSchema = new mongoose.Schema({
   classes: { type: mongoose.Schema.Types.ObjectId, ref: "Class"},
 }, { timestamps: true });
 
-export default mongoose.model("StudentProfile", studentProfileSchema);
+const Students =  mongoose.model("Students", studentProfileSchema);
+export default Students

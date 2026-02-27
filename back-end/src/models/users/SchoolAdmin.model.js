@@ -6,4 +6,5 @@ const schoolAdminProfileSchema = new mongoose.Schema({
   permissions: [{ type: String }] // مثال: ["manage_students", "manage_teachers"]
 }, { timestamps: true });
 
-export default mongoose.model("SchoolAdminProfile", schoolAdminProfileSchema);
+const SchoolAdmins = mongoose.model("SchoolAdmins", schoolAdminProfileSchema);
+export default SchoolAdmins
