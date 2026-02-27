@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import {
     FaUserGraduate, FaChalkboardTeacher, FaMapMarkerAlt,
@@ -6,6 +8,7 @@ import {
     FaAward, FaBook, FaCalendarAlt, FaShieldAlt
 } from 'react-icons/fa';
 import schoolifyLogo from '../../assets/schoolify_logo_transparent (1).png';
+import LogoLoader from '../../components/Loader/Loader';
 import './SchoolProfile.css';
 
 const fadeUp = {
@@ -14,8 +17,52 @@ const fadeUp = {
     transition: { duration: 0.5 }
 };
 
-export default function SchoolProfile({ school, onBack }) {
-    // If no school is provided (shouldn't happen with proper logic), show a fallback
+export default function SchoolProfile({ school: initialSchool, onBack }) {
+    const { id } = useParams();
+    const [school, setSchool] = useState(initialSchool);
+    const [loading, setLoading] = useState(!initialSchool);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchSchool = async () => {
+            if (!id) return;
+            try {
+                setLoading(true);
+                const response = await axios.get(`http://localhost:5150/api/schools/get/${id}`);
+                if (response.data.status === 'success') {
+                    setSchool(response.data.data.school);
+                } else {
+                    setError("Institution not found.");
+                }
+            } catch (err) {
+                console.error("Fetch error:", err);
+                setError("Failed to load institution details.");
+            } finally {
+                // Short delay for premium loader feel
+                setTimeout(() => setLoading(false), 800);
+            }
+        };
+
+        if (!school || school._id !== id) {
+            fetchSchool();
+        }
+    }, [id, school]);
+
+    if (loading) return <LogoLoader />;
+
+    if (error) {
+        return (
+            <div className="sl-page">
+                <div className="sl-container">
+                    <div className="sl-error">
+                        <p>{error}</p>
+                        <button onClick={onBack} className="sl-view-btn">Back to Directory</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     if (!school) return null;
 
     const { identity, contact, stats, administration } = school;
@@ -54,11 +101,10 @@ export default function SchoolProfile({ school, onBack }) {
                                 <span className="sp-tag">{administration?.educationalStage || 'General'}</span>
                             </div>
                             <p className="sp-location">
-                                <FaMapMarkerAlt /> {contact?.address?.city || 'Unknown City'}, {contact?.address?.country || 'Unknown Country'}
+                                <FaMapMarkerAlt /> {contact?.address?.street ? `${contact.address.street}, ` : ''}{contact?.address?.city || 'Unknown City'}, {contact?.address?.governorate || ''} {contact?.address?.country || 'Unknown Country'}
                             </p>
                         </div>
                         <div className="sp-header-actions">
-
                             <button className="sp-btn-outline">Contact Admin</button>
                         </div>
                     </div>
@@ -78,6 +124,15 @@ export default function SchoolProfile({ school, onBack }) {
                             <p className="sp-full-desc">
                                 {identity.description || "Detailed description for this institution is currently being updated. Schoolify ensures that all registered schools maintain a high standard of educational excellence and community involvement."}
                             </p>
+                        </motion.section>
+
+                        <motion.section className="sp-section" variants={fadeUp}>
+                            <h2 className="sp-sec-title">Administration</h2>
+                            <div className="sp-admin-info">
+                                <p><strong>Educational Stage:</strong> {administration?.educationalStage?.toUpperCase() || 'GENERAL'}</p>
+                                <p><strong>Status:</strong> {administration?.isActive ? '✅ Active' : '❌ Inactive'}</p>
+                                <p><strong>School Code:</strong> {identity.code}</p>
+                            </div>
                         </motion.section>
 
                         <motion.section className="sp-section" variants={fadeUp}>
@@ -132,10 +187,17 @@ export default function SchoolProfile({ school, onBack }) {
                                 </div>
                             </div>
                             <div className="sp-side-stat">
-                                <FaCalendarAlt />
+                                <FaUserGraduate />
                                 <div>
-                                    <strong>Active</strong>
-                                    <span>Current Status</span>
+                                    <strong>{stats?.totalAdmins || 0}</strong>
+                                    <span>Staff Admins</span>
+                                </div>
+                            </div>
+                            <div className="sp-side-stat">
+                                <FaBook />
+                                <div>
+                                    <strong>{stats?.totalClasses || 0}</strong>
+                                    <span>Total Classes</span>
                                 </div>
                             </div>
                         </div>
@@ -152,7 +214,18 @@ export default function SchoolProfile({ school, onBack }) {
                             )}
                             {contact.website && (
                                 <div className="sp-contact-link">
-                                    <FaGlobe /> <span>{contact.website}</span>
+                                    <FaGlobe /> <a href={contact.website} target="_blank" rel="noopener noreferrer">{contact.website}</a>
+                                </div>
+                            )}
+
+                            {contact.socialLinks && contact.socialLinks.length > 0 && (
+                                <div className="sp-social-links">
+                                    <h4>Social Media</h4>
+                                    {contact.socialLinks.map((link, idx) => (
+                                        <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" className="sp-social-tag">
+                                            {link.platform}
+                                        </a>
+                                    ))}
                                 </div>
                             )}
                         </div>
