@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import schoolifyLogo from "../../assets/schoolify_logo_transparent (1).png";
 import "./Login.css";
+import LogoLoader from "../../components/Loader/Loader";
 
 const staggerContainer = {
     initial: {},
@@ -22,6 +23,7 @@ export default function Login({ onSwitch }) {
     const [form, setForm] = useState({ email: "", password: "" });
     const [showPassword, setShowPassword] = useState(false);
     const [touched, setTouched] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -33,9 +35,17 @@ export default function Login({ onSwitch }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setLoading(true);
         console.log("Login Attempt:", form);
-        alert("Check console for login data. Role will be fetched from backend later.");
+
+        // Simulate API call
+        setTimeout(() => {
+            setLoading(false);
+            alert("Check console for login data. Role will be fetched from backend later.");
+        }, 1500);
     };
+
+    if (loading) return <LogoLoader />;
 
     const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
 

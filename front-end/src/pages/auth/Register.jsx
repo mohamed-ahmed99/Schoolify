@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import schoolifyLogo from "../../assets/schoolify_logo_transparent (1).png";
 import "./Login.css";
+import LogoLoader from "../../components/Loader/Loader";
 
 const ROLES = [
     { value: "owner", label: "School Owner" },
@@ -35,6 +36,7 @@ export default function Register({ onSwitch }) {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [touched, setTouched] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -50,9 +52,18 @@ export default function Register({ onSwitch }) {
             alert("Passwords do not match!");
             return;
         }
+
+        setLoading(true);
         console.log("Registration Data:", form);
-        alert(`Registered as ${form.role}! Check console for details.`);
+
+        // Simulate API call
+        setTimeout(() => {
+            setLoading(false);
+            alert(`Registered as ${form.role}! Check console for details.`);
+        }, 1500);
     };
+
+    if (loading) return <LogoLoader />;
 
     const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
     const passwordsMatch = form.password === form.confirmPassword;

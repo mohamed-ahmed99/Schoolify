@@ -34,10 +34,12 @@ const Navbar = ({ onNavigate }) => {
                     <div className="nav-dropdown">
                         <button className="nav-link">Profiles</button>
                         <div className="dropdown-content">
-                            <button onClick={() => onNavigate('profile-owner')}>Owner</button>
-                            <button onClick={() => onNavigate('profile-admin')}>Admin</button>
-                            <button onClick={() => onNavigate('profile-teacher')}>Teacher</button>
-                            <button onClick={() => onNavigate('profile-student')}>Student</button>
+                            <button onClick={() => onNavigate('profile-owner')}>Owner Profile</button>
+                            <button onClick={() => onNavigate('profile-admin')}>Admin Profile</button>
+                            <button onClick={() => onNavigate('profile-teacher')}>Teacher Profile</button>
+                            <button onClick={() => onNavigate('profile-student')}>Student Profile</button>
+                            <hr style={{ margin: '8px 0', opacity: 0.1 }} />
+                            <button onClick={() => onNavigate('register-school')}>Register School</button>
                         </div>
                     </div>
                     <motion.button className="nav-link" onClick={() => onNavigate('login')} whileHover={{ y: -2 }}>Portal</motion.button>

@@ -4,6 +4,8 @@ import { FaUserGraduate, FaChalkboardTeacher, FaMapMarkerAlt, FaArrowRight } fro
 import schoolifyLogo from '../../assets/schoolify_logo_transparent (1).png';
 import './SchoolsList.css';
 
+import LogoLoader from '../../components/Loader/Loader';
+
 const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -40,7 +42,8 @@ export default function SchoolsList({ onViewProfile }) {
                 setError("Could not connect to the server. Please ensure the backend is running.");
                 console.error("Fetch error:", err);
             } finally {
-                setLoading(false);
+                // Keep loader visible for at least 1 second for premium feel
+                setTimeout(() => setLoading(false), 1000);
             }
         };
 
@@ -48,16 +51,7 @@ export default function SchoolsList({ onViewProfile }) {
     }, []);
 
     if (loading) {
-        return (
-            <div className="sl-page">
-                <div className="sl-container">
-                    <div className="sl-loading">
-                        <div className="sl-spinner"></div>
-                        <p>Loading schools...</p>
-                    </div>
-                </div>
-            </div>
-        );
+        return <LogoLoader />;
     }
 
     if (error) {

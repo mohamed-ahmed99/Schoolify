@@ -10,6 +10,7 @@ import OwnerProfile from "./pages/Profiles/OwnerProfile";
 import AdminProfile from "./pages/Profiles/AdminProfile";
 import TeacherProfile from "./pages/Profiles/TeacherProfile";
 import StudentProfile from "./pages/Profiles/StudentProfile";
+import RegisterSchool from "./pages/Schools/RegisterSchool";
 import Navbar from "./components/Navbar";
 import { ThemeProvider } from "./context/ThemeContext";
 
@@ -52,6 +53,7 @@ export default function App() {
       <Navbar onNavigate={(page) => {
         if (page === 'home') navigate('/');
         else if (page === 'schools') navigate('/listSchool');
+        else if (page === 'register-school') navigate('/register-school');
         else if (page === 'login') navigate('/login');
         else if (page === 'register') navigate('/register');
         else if (page === 'profile-owner') navigate('/profile/owner');
@@ -65,6 +67,7 @@ export default function App() {
             <Route path="/" element={<PageWrapper><Home onJoin={(mode) => navigate(`/${mode}`)} /></PageWrapper>} />
             <Route path="/login" element={<PageWrapper><Login onSwitch={() => navigate('/register')} /></PageWrapper>} />
             <Route path="/register" element={<PageWrapper><Register onSwitch={() => navigate('/login')} /></PageWrapper>} />
+            <Route path="/register-school" element={<PageWrapper><RegisterSchool /></PageWrapper>} />
             <Route path="/listSchool" element={<PageWrapper><SchoolsList onViewProfile={handleViewProfile} /></PageWrapper>} />
             <Route path="/school/:id" element={<PageWrapper><SchoolProfile school={selectedSchool} onBack={() => navigate('/listSchool')} /></PageWrapper>} />
 
