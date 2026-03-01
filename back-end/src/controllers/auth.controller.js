@@ -38,7 +38,7 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 
             // create token and session
             const token = generateToken({ id: user._id, role: user.account.role, email: user.contact.email });
-            const session = await Sessions.create({ user: user._id, ip, userAgent, token });
+            await Sessions.create({ user: user._id, ip, userAgent, token });
 
             // send token and session to client
             return res.status(200).json({
@@ -85,6 +85,9 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 
 
 
+
+
+/////////////////// sign in
 export const signIn = asyncHandler(async (req, res) => {
     const { email, password, accountType } = req.body;
 

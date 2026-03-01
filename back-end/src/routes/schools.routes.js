@@ -1,6 +1,9 @@
 
 import { Router } from "express";
 import { createSchool, getSchoolById, getSchools } from "../controllers/school.controller.js";
+import checkAuth from "../middleware/checkAuth.js";
+import { ROLES } from "../utils/constants.js";
+
 
 const schoolRoutes = Router()
 
@@ -8,7 +11,7 @@ const schoolRoutes = Router()
 schoolRoutes.get("/get", getSchools)
 schoolRoutes.get("/get/:id", getSchoolById)
 
-schoolRoutes.post("/create", createSchool)
+schoolRoutes.post("/create", checkAuth([ROLES.SYSTEM_ADMIN]), createSchool)
 
 
 export default schoolRoutes
