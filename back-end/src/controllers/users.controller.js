@@ -83,8 +83,17 @@ export const createUser = asyncHandler(async (req, res) => {
     // hash password
     user.account.password = await bcrypt.hash(user.account.password, 10);
 
+    // check if user exists
+    const isUserExists = await Users.findOne({ "contact.email": user.contact.email });
+    if (isUserExists) {
+        return res.status(400).json({ status: "fail", message: "This email is already used", data: null });
+    }
+
+    // generate verification code
+    const code = Math.floor(100000 + Math.random() * 900000);
+
     // create user
-    const newUser = await Users.create(user);
+    const newUser = await Users.create({...user, verification: { code }});
 
     // create role profile based on user role
     let profileData = null;
@@ -113,6 +122,6 @@ export const createUser = asyncHandler(async (req, res) => {
     res.status(201).json({
         status: "success",
         message: "User and profile created successfully",
-        data: { user: newUser, profile: profileData }
+        data: { id: newUser._id, email: newUser.contact.email, role: newUser.account.role }
     });
 });

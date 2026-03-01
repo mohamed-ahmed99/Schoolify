@@ -10,4 +10,5 @@ export const ROLES = {
   SCHOOL_ADMIN: "school_admin",
   HEAD_TEACHER: "head_teacher",
   SYSTEM_ADMIN: "system_admin",
+  SCHOOL: "school",
 };

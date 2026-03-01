@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ROLES } from "../utils/constants.js";
 
 const schoolSchema = new mongoose.Schema({
 
@@ -8,6 +9,11 @@ const schoolSchema = new mongoose.Schema({
     description: { type: String },
     code: { type: String, required: true, unique: true },
     logo: String,
+  },
+
+  account: {
+    password: { type: String, required: true, select: false },
+    role: { type: String, default: ROLES.SCHOOL },
   },
 
   // Contact
@@ -47,12 +53,12 @@ const schoolSchema = new mongoose.Schema({
     isActive: { type: Boolean, default: true },
     isVerified: { type: Boolean, default: false },
 
-    verification: {
-      code: { type: String },
-      expiresAt: { type: Date, default: Date.now() + 10 * 60 * 1000 }
-    }
   },
 
+  verification: {
+    code: { type: String },
+    expiresAt: { type: Date, default: Date.now() + 10 * 60 * 1000 }
+  },
   // Statistics
   stats: {
     totalStudents: { type: Number, default: 0 },

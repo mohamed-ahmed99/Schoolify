@@ -23,11 +23,12 @@ export const verifyEmail = asyncHandler(async (req, res) => {
         // 1. Try to find and verify a User
         const user = await Users.findOne({ "contact.email": email });
 
-        if (user.verification.code !== code) {
-            return res.status(400).json({ status: "fail", message: "Invalid code", data: null });
-        }
-
+        
         if (user) {
+            if (user.verification.code != code) {
+                return res.status(400).json({ status: "fail", message: "Invalid code", data: null });
+            }
+
             // update user
             user.isVerified = true;
             user.verification.code = null;
@@ -49,13 +50,18 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 
     if (accountType === "school") {
         // 2. Try to find and verify a School
-        const school = await Schools.findOne({ "contact.email": email, "administration.verification.code": code });
+        const school = await Schools.findOne({ "contact.email": email});
 
         if (school) {
+
+            if (school.verification.code != code) {
+                return res.status(400).json({ status: "fail", message: "Invalid code", data: null });
+            }
+
             // update school
-            school.administration.verification.isVerified = true;
-            school.administration.verification.code = null;
-            school.administration.verification.expiresAt = null; // Stop TTL from deleting verified accounts
+            school.administration.isVerified = true;
+            school.verification.code = null;
+            school.verification.expiresAt = null; // Stop TTL from deleting verified accounts
             await school.save();
 
             // create token and session
@@ -70,7 +76,6 @@ export const verifyEmail = asyncHandler(async (req, res) => {
             });
         }
     }
-
-    // 3. If neither found
-    return res.status(404).json({ status: "fail", message: "Invalid email", data: null });
+    
+    return res.status(404).json({ status: "fail", message: "this email is not registered", data: null });
 })
