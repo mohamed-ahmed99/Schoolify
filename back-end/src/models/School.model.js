@@ -42,7 +42,7 @@ const schoolSchema = new mongoose.Schema({
     headTeacher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
-      required: true
+      required: false
     },
 
     educationalStage: {

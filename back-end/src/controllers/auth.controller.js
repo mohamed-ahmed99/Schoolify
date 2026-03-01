@@ -48,34 +48,34 @@ export const verifyEmail = asyncHandler(async (req, res) => {
         }
     }
 
-    if (accountType === "school") {
+    else if (accountType === "school") {
         // 2. Try to find and verify a School
         const school = await Schools.findOne({ "contact.email": email});
 
-        if (school) {
-
-            if (school.verification.code != code) {
-                return res.status(400).json({ status: "fail", message: "Invalid code", data: null });
-            }
-
-            // update school
-            school.administration.isVerified = true;
-            school.verification.code = null;
-            school.verification.expiresAt = null; // Stop TTL from deleting verified accounts
-            await school.save();
-
-            // create token and session
-            const token = generateToken({ id: school._id, role: school.account.role, email: school.contact.email });
-            const session = await Sessions.create({ user: school._id, ip, userAgent, token });
-
-            // send token and session to client
-            return res.status(200).json({
-                status: "success",
-                message: "School email verified successfully",
-                data: { id: school._id, email: school.contact.email, name: school.identity.name }
-            });
+        if (!school) {
+            return res.status(404).json({ status: "fail", message: "This email is not registered in any school", data: null });
         }
+
+        // check code
+        if (school.verification.code != code) {
+            return res.status(400).json({ status: "fail", message: "Invalid code", data: null });
+        }
+
+        // update school
+        school.administration.isVerified = true;
+        school.verification.code = null;
+        school.verification.expiresAt = null; // Stop TTL from deleting verified accounts
+        await school.save();
+
+        // create token and session
+        const token = generateToken({ id: school._id, role: school.account.role, email: school.contact.email });
+        await Sessions.create({ user: school._id, ip, userAgent, token });
+
+        // send token and data to client
+        return res.status(200).json({
+            status: "success",
+            message: "School email verified successfully",
+            data: { id: school._id, email: school.contact.email, role: school.account.role, token}
+        });
     }
-    
-    return res.status(404).json({ status: "fail", message: "this email is not registered", data: null });
 })
