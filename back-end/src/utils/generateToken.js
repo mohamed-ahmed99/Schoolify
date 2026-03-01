@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
-const generateToken = (data) => {
-    const token = jwt.sign({...data.payload}, process.env.JWT_SECRET);
+const generateToken = (payload) => {
+    const token = jwt.sign(payload, process.env.JWT_SECRET);
     return token;
 }
 
