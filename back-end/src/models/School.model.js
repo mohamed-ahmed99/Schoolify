@@ -5,14 +5,14 @@ const schoolSchema = new mongoose.Schema({
   // Identity
   identity: {
     name: { type: String, required: true },
-    description: { type: String},
+    description: { type: String },
     code: { type: String, required: true, unique: true },
     logo: String,
   },
 
   // Contact
   contact: {
-    email: {type:String, required:true},
+    email: { type: String, required: true },
     phone: String,
     website: String,
 
@@ -36,7 +36,7 @@ const schoolSchema = new mongoose.Schema({
     headTeacher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
-      required:true
+      required: true
     },
 
     educationalStage: {
@@ -44,9 +44,12 @@ const schoolSchema = new mongoose.Schema({
       enum: ["primary", "preparatory", "secondary", "all"]
     },
 
-    isActive: {
-      type: Boolean,
-      default: true
+    isActive: { type: Boolean, default: true },
+    isVerified: { type: Boolean, default: false },
+
+    verification: {
+      code: { type: String },
+      expiresAt: { type: Date, default: Date.now() + 10 * 60 * 1000 }
     }
   },
 
@@ -59,6 +62,11 @@ const schoolSchema = new mongoose.Schema({
   },
 
 }, { timestamps: true });
+
+schoolSchema.index({ "administration.verification.expiresAt": 1 }, {
+  expireAfterSeconds: 600,
+  partialFilterExpression: { "administration.verification.isVerified": false }
+});
 
 const Schools = mongoose.model("schools", schoolSchema)
 export default Schools

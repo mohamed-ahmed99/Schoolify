@@ -14,6 +14,7 @@ import usersRoutes from './routes/users.routes.js'
 const app = express()
 
 dotenv.config()
+app.set("trust proxy", 1);
 
 // cors
 const allowedOrigins = process.env.ORIGINS.split(',') || []

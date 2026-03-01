@@ -21,5 +21,5 @@ const headTeacherSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-const HeadTeachers = mongoose.model("HeadTeachers", headTeacherSchema);
+const HeadTeachers = mongoose.model("headTeachers", headTeacherSchema);
 export default HeadTeachers

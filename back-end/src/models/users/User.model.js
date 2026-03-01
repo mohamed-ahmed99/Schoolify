@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   personalInfo: {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    avatar: { type: String },      
+    avatar: { type: String },
     age: { type: Number },
     bio: { type: String },
     birthDay: { type: String },
@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
   // Contact Info
   contact: {
     phoneNumber: { type: String },
-    email: { type: String, required: true, unique: true, index:true },
+    email: { type: String, required: true, unique: true, index: true },
     address: {
       country: { type: String },
       governorate: { type: String },
@@ -27,17 +27,28 @@ const userSchema = new mongoose.Schema({
 
   // Account Info
   account: {
-    password: { type: String, required: true, select:false },
+    password: { type: String, required: true, select: false },
     role: { type: String, enum: Object.values(ROLES), required: true },
   },
 
+  verification: {
+    code: { type: String },
+    expiresAt: { type: Date, default: Date.now() + 10 * 60 * 1000 }
+  },
+
   // school info
-  school: { type: mongoose.Schema.Types.ObjectId, ref: "schools" }, 
+  school: { type: mongoose.Schema.Types.ObjectId, ref: "schools" },
 
   // status
+  isVerified: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true },
-  
+
 }, { timestamps: true });
 
-const Users = mongoose.model("Users", userSchema);
+userSchema.index({ "verification.expiresAt": 1 }, {
+  expireAfterSeconds: 600,
+  partialFilterExpression: { isVerified: false }
+});
+
+const Users = mongoose.model("users", userSchema);
 export default Users;

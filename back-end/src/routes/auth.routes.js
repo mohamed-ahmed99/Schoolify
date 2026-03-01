@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { signUp } from "../controllers/auth.controller.js";
+import { verifyEmail } from "../controllers/auth.controller.js";
 
 const authRoutes = Router()
 
 
-authRoutes.post("/signup", signUp)
+authRoutes.post("/verify-email", verifyEmail)
 
 
 
