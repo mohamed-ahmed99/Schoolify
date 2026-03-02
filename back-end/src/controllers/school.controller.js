@@ -5,13 +5,17 @@ import bcrypt from "bcrypt"
 export const getSchools = asyncHandler(async (req, res) => {
     const { limit, page } = req.query
 
+    // check limit and page
     if (!limit || !page) {
         res.status(400).json({ status: "fail", message: "limit and page are required", data: null })
     }
 
-    const schools = await Schools.find().limit(limit).skip((page - 1) * limit).sort({ createdAt: -1 })
+    // get schools
+    const schools = await Schools.find().limit(limit).skip((page - 1) * limit)
+        .sort({ createdAt: -1 })
+        .select("-account.role -verification -createdAt -updatedAt -__v -headTeacher ")
 
-
+    // send response
     res.status(200).json({ status: "success", message: "", data: { schools } })
 })
 
@@ -20,12 +24,12 @@ export const getSchoolById = asyncHandler(async (req, res) => {
     const { id } = req.params
 
     if (!id) {
-        res.status(400).json({ status: "fail", message: "id is required", data: null })
+        return res.status(400).json({ status: "fail", message: "id is required", data: null })
     }
 
-    const school = await Schools.findById(id)
+    const school = await Schools.findById(id).populate("headTeacher", "personalInfo contact")
     if (!school) {
-        res.status(404).json({ status: "fail", message: "school not found", data: null })
+        return res.status(404).json({ status: "fail", message: "School not found", data: null })
     }
 
     res.status(200).json({ status: "success", message: "", data: { school } })

@@ -7,7 +7,7 @@ const schoolSchema = new mongoose.Schema({
   identity: {
     name: { type: String, required: true },
     description: { type: String },
-    code: { type: String, required: true, unique: true },
+    code: { type: String, required: true },
     logo: String,
   },
 
@@ -18,7 +18,7 @@ const schoolSchema = new mongoose.Schema({
 
   // Contact
   contact: {
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     phone: String,
     website: String,
 
@@ -38,22 +38,21 @@ const schoolSchema = new mongoose.Schema({
   },
 
   // Administration
-  administration: {
-    headTeacher: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-      required: false
-    },
 
-    educationalStage: {
-      type: String,
-      enum: ["primary", "preparatory", "secondary", "all"]
-    },
-
-    isActive: { type: Boolean, default: true },
-    isVerified: { type: Boolean, default: false },
-
+  headTeacher: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+    default: null
   },
+
+  educationalStage: {
+    type: String,
+    enum: ["primary", "preparatory", "secondary", "all"]
+  },
+
+  isActive: { type: Boolean, default: true },
+  isVerified: { type: Boolean, default: false },
+
 
   verification: {
     code: { type: String },
@@ -69,10 +68,10 @@ const schoolSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-schoolSchema.index({ "administration.verification.expiresAt": 1 }, {
-  expireAfterSeconds: 600,
-  partialFilterExpression: { "administration.verification.isVerified": false }
-});
+schoolSchema.index(
+  { "verification.expiresAt": 1 },
+  { expireAfterSeconds: 0, partialFilterExpression: { isVerified: false } }
+);
 
 const Schools = mongoose.model("schools", schoolSchema)
 export default Schools

@@ -10,7 +10,7 @@ import bcrypt from 'bcrypt'
 
 
 export const verifyEmail = asyncHandler(async (req, res) => {
-    const { email, code, accountType } = req.body;
+    const { email, code, accountType, schoolId } = req.body;
 
     if (!email || !code || !accountType) {
         return res.status(400).json({ status: "fail", message: "Email, code and accountType are required", data: null });
@@ -26,15 +26,34 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 
 
         if (user) {
+            // check code
             if (user.verification.code != code) {
                 return res.status(400).json({ status: "fail", message: "Invalid code", data: null });
             }
 
+            // check school
+            const school = await Schools.findById(schoolId);
+            if (!school) {
+                return res.status(404).json({ status: "fail", message: "School not found", data: null });
+            }
+
+            // check if school already has a head teacher
+            if (school.headTeacher) {
+                return res.status(400).json({ status: "fail", message: "This school already has a head teacher", data: null });
+            }
+
+            // update school
+            school.headTeacher = user._id;
+            await school.save();
+
             // update user
             user.isVerified = true;
+            user.school = school._id;
             user.verification.code = null;
             user.verification.expiresAt = null; // Stop TTL from deleting verified accounts
             await user.save();
+
+
 
             // create token and session
             const token = generateToken({ id: user._id, role: user.account.role, email: user.contact.email });
@@ -63,7 +82,7 @@ export const verifyEmail = asyncHandler(async (req, res) => {
         }
 
         // update school
-        school.administration.isVerified = true;
+        school.isVerified = true;
         school.verification.code = null;
         school.verification.expiresAt = null; // Stop TTL from deleting verified accounts
         await school.save();
@@ -135,7 +154,7 @@ export const signIn = asyncHandler(async (req, res) => {
             return res.status(400).json({ status: "fail", message: "Invalid email or password", data: null });
         }
 
-        if (!school.administration.isVerified) {
+        if (!school.isVerified) {
             return res.status(400).json({ status: "fail", message: "Please verify your school email first", data: null });
         }
 
