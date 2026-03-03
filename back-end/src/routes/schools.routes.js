@@ -11,7 +11,7 @@ const schoolRoutes = Router()
 schoolRoutes.get("/get", getSchools)
 schoolRoutes.get("/get/:id", getSchoolById)
 
-schoolRoutes.post("/create", checkAuth([ROLES.SYSTEM_ADMIN]), createSchool)
+schoolRoutes.post("/create", createSchool)
 
 
 export default schoolRoutes
