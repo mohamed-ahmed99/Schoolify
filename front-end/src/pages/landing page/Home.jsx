@@ -294,7 +294,7 @@ export default function Home({ onJoin }) {
       </section>
 
       {/* ═══════ FEATURES BENTO ════════════════════════════ */}
-      <section className="sc-features">
+    {/*  <section className="sc-features">
         <div className="sc-container">
           <motion.div className="sc-section-head" {...scrollFadeUp(0)}>
             <span className="sc-section-tag"><FaBolt /> Core Platform</span>
@@ -350,9 +350,9 @@ export default function Home({ onJoin }) {
           </motion.div>
         </div>
       </section>
-
+*/}
       {/* ═══════ HOW IT WORKS ══════════════════════════════ */}
-      <section className="sc-how">
+    { /* <section className="sc-how">
         <div className="sc-container">
           <motion.div className="sc-section-head" {...scrollFadeUp(0)}>
             <span className="sc-section-tag"><FaUsers /> Workflow</span>
@@ -380,7 +380,7 @@ export default function Home({ onJoin }) {
             ))}
           </motion.div>
         </div>
-      </section>
+      </section>/*}
 
       {/* ═══════ TEAM ═════════════════════════════════════ */}
       <section className="sc-team">
