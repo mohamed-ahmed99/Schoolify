@@ -50,7 +50,7 @@ const schoolSchema = new mongoose.Schema({
     enum: ["primary", "preparatory", "secondary", "all"]
   },
 
-  isActive: { type: Boolean, default: true },
+  isActive: { type: Boolean, default: false },
   isVerified: { type: Boolean, default: false },
 
 
