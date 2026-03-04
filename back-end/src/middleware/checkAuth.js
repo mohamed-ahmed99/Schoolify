@@ -3,7 +3,7 @@ import asyncHandler from "./asyncHandler.js";
 import Sessions from "../models/Sessions.model.js";
 import { ROLES } from "../utils/constants.js";
 
-const checkAuth = (allowedRoles = []) => {
+export const checkAuth = (allowedRoles = []) => {
     return asyncHandler(async (req, res, next) => {
         let token;
 
@@ -19,10 +19,9 @@ const checkAuth = (allowedRoles = []) => {
         try {
             // 2. Verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            console.log(decoded);
 
             // 3. Check if session exists in DB
-            const session = await Sessions.findOne({ token });
+            const session = await Sessions.findOne({user: decoded.id });
             if (!session) {
                 return res.status(401).json({ status: "fail", message: "Session expired or invalid. Please sign in again.", data: null });
             }
@@ -53,4 +52,3 @@ const checkAuth = (allowedRoles = []) => {
     });
 };
 
-export default checkAuth;

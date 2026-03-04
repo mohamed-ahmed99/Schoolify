@@ -170,3 +170,17 @@ export const signIn = asyncHandler(async (req, res) => {
         return res.status(400).json({ status: "fail", message: "Invalid account type", data: null });
     }
 })
+
+
+// verify me
+export const verifyMe = asyncHandler(async (req, res) => {
+    const user = await Users.findById(req.user.id).select("-verification");
+    if (!user) {
+        return res.status(404).json({ status: "fail", message: "User not found", data: null });
+    }
+    return res.status(200).json({
+        status: "success",
+        message: "User verified successfully",
+        data: { id: user._id, email: user.contact.email, role: user.account.role, personalInfo: user.personalInfo, school: user.school }
+    });
+})

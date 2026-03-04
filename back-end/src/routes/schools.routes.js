@@ -1,7 +1,7 @@
 
 import { Router } from "express";
 import { createSchool, getSchoolById, getSchools } from "../controllers/school.controller.js";
-import checkAuth from "../middleware/checkAuth.js";
+import {checkAuth} from "../middleware/checkAuth.js";
 import { ROLES } from "../utils/constants.js";
 
 
