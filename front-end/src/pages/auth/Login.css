@@ -5,7 +5,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 
 /* ---------- Reset & Root ---------- */
-/* Removed local reset to avoid redundancy with index.css */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 /* ---------- Root Container ---------- */
 .login-root {
@@ -37,7 +44,7 @@
 .blob-1 {
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, var(--purple), transparent);
+    background: radial-gradient(circle, #6366f1, transparent);
     top: -200px;
     left: -150px;
 }
@@ -45,7 +52,7 @@
 .blob-2 {
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, var(--teal), transparent);
+    background: radial-gradient(circle, #10b981, transparent);
     bottom: -150px;
     right: -100px;
 }
@@ -53,7 +60,7 @@
 .blob-3 {
     width: 350px;
     height: 350px;
-    background: radial-gradient(circle, var(--accent), transparent);
+    background: radial-gradient(circle, #8b5cf6, transparent);
     bottom: 25%;
     left: 15%;
     opacity: 0.15;
@@ -71,7 +78,7 @@
     border: 1px solid var(--border-color);
     border-radius: 28px;
     padding: 48px;
-    box-shadow: var(--card-shadow);
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5);
     text-align: center;
     transition: background-color var(--transition-speed);
 }
@@ -228,8 +235,8 @@
 }
 
 .field-select option {
-    background: #0f172a;
-    color: white;
+    background: var(--input-bg);
+    color: var(--text-primary);
 }
 
 .select-arrow {
@@ -263,11 +270,11 @@
     border: none;
     color: var(--text-secondary);
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--transition-speed);
 }
 
 .field-toggle:hover {
-    color: white;
+    color: var(--text-primary);
 }
 
 .login-btn {
@@ -293,6 +300,12 @@
     transform: translateY(-2px);
     box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.4);
     filter: brightness(1.1);
+}
+
+.login-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .auth-switch {
