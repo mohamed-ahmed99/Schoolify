@@ -141,6 +141,54 @@
     position: relative;
 }
 
+/* ---------- Role Selector Grid ---------- */
+.role-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.role-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px 12px;
+    background: var(--input-bg);
+    border: 2px solid transparent;
+    /* default transparent border instead of 1px to avoid layout jump on hover */
+    box-shadow: 0 0 0 1px var(--border-color);
+    /* fake 1px border */
+    border-radius: 14px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.role-card:hover {
+    box-shadow: 0 0 0 2px var(--border-color);
+    transform: translateY(-2px);
+}
+
+.role-card.active {
+    background: rgba(var(--accent-rgb, 59, 130, 246), 0.1);
+    box-shadow: 0 0 0 2px var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.role-card .role-icon {
+    font-size: 24px;
+    transition: transform 0.2s;
+}
+
+.role-card.active .role-icon {
+    transform: scale(1.1);
+}
+
 .field-icon {
     position: absolute;
     left: 16px;

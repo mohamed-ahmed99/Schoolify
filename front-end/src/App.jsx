@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
 import Home from "./pages/landing page/Home";
 import SchoolsList from "./pages/Schools/SchoolsList";
 import SchoolProfile from "./pages/Schools/SchoolProfile";
@@ -13,6 +12,10 @@ import StudentProfile from "./pages/Profiles/StudentProfile";
 import RegisterSchool from "./pages/Schools/RegisterSchool";
 import Navbar from "./components/Navbar";
 import { ThemeProvider } from "./context/ThemeContext";
+import { AuthProvider } from "./context/AuthContext";
+import { Toaster } from "react-hot-toast";
+import VerifySchools from "./pages/Admin/VerifySchools";
+import AdminLogin from "./pages/Admin/AdminLogin";
 
 // Simple page variants
 const pageVariants = {
@@ -49,36 +52,44 @@ export default function App() {
   };
 
   return (
-    <ThemeProvider>
-      <Navbar onNavigate={(page) => {
-        if (page === 'home') navigate('/');
-        else if (page === 'schools') navigate('/listSchool');
-        else if (page === 'register-school') navigate('/register-school');
-        else if (page === 'login') navigate('/login');
-        else if (page === 'register') navigate('/register');
-        else if (page === 'profile-owner') navigate('/profile/owner');
-        else if (page === 'profile-admin') navigate('/profile/admin');
-        else if (page === 'profile-teacher') navigate('/profile/teacher');
-        else if (page === 'profile-student') navigate('/profile/student');
-      }} />
-      <main style={{ minHeight: 'calc(100vh - 70px)', overflowX: 'hidden' }}>
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<PageWrapper><Home onJoin={(mode) => navigate(`/${mode}`)} /></PageWrapper>} />
-            <Route path="/login" element={<PageWrapper><Login onSwitch={() => navigate('/register')} /></PageWrapper>} />
-            <Route path="/register" element={<PageWrapper><Register onSwitch={() => navigate('/login')} /></PageWrapper>} />
-            <Route path="/register-school" element={<PageWrapper><RegisterSchool /></PageWrapper>} />
-            <Route path="/listSchool" element={<PageWrapper><SchoolsList onViewProfile={handleViewProfile} /></PageWrapper>} />
-            <Route path="/school/:id" element={<PageWrapper><SchoolProfile school={selectedSchool} onBack={() => navigate('/listSchool')} /></PageWrapper>} />
+    <AuthProvider>
+      <ThemeProvider>
+        <Toaster position="top-right" />
+        {location.pathname !== '/admin/login' && (
+          <Navbar onNavigate={(page) => {
+            if (page === 'home') navigate('/');
+            else if (page === 'schools') navigate('/listSchool');
+            else if (page === 'register-school') navigate('/register-school');
+            else if (page === 'login') navigate('/login');
+            else if (page === 'register') navigate('/register');
+            else if (page === 'profile-owner') navigate('/profile/owner');
+            else if (page === 'profile-admin') navigate('/profile/admin');
+            else if (page === 'profile-teacher') navigate('/profile/teacher');
+            else if (page === 'profile-student') navigate('/profile/student');
+          }} />
+        )}
+        <main style={{ minHeight: 'calc(100vh - 70px)', overflowX: 'hidden' }}>
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<PageWrapper><Home onJoin={(mode) => navigate(`/${mode}`)} /></PageWrapper>} />
+              <Route path="/login" element={<PageWrapper><Login onSwitch={() => navigate('/register-school')} /></PageWrapper>} />
+              <Route path="/register-school" element={<PageWrapper><RegisterSchool /></PageWrapper>} />
+              <Route path="/listSchool" element={<PageWrapper><SchoolsList onViewProfile={handleViewProfile} /></PageWrapper>} />
+              <Route path="/school/:id" element={<PageWrapper><SchoolProfile school={selectedSchool} onBack={() => navigate('/listSchool')} /></PageWrapper>} />
 
-            {/* Dedicated Individual Profile Routes */}
-            <Route path="/profile/owner" element={<PageWrapper><OwnerProfile /></PageWrapper>} />
-            <Route path="/profile/admin" element={<PageWrapper><AdminProfile /></PageWrapper>} />
-            <Route path="/profile/teacher" element={<PageWrapper><TeacherProfile /></PageWrapper>} />
-            <Route path="/profile/student" element={<PageWrapper><StudentProfile /></PageWrapper>} />
-          </Routes>
-        </AnimatePresence>
-      </main>
-    </ThemeProvider>
+              {/* Dedicated Individual Profile Routes */}
+              <Route path="/profile/owner" element={<PageWrapper><OwnerProfile /></PageWrapper>} />
+              <Route path="/profile/admin" element={<PageWrapper><AdminProfile /></PageWrapper>} />
+              <Route path="/profile/teacher" element={<PageWrapper><TeacherProfile /></PageWrapper>} />
+              <Route path="/profile/student" element={<PageWrapper><StudentProfile /></PageWrapper>} />
+
+              {/* Admin Routes */}
+              <Route path="/admin/login" element={<PageWrapper><AdminLogin /></PageWrapper>} />
+              <Route path="/admin/verify-schools" element={<PageWrapper><VerifySchools /></PageWrapper>} />
+            </Routes>
+          </AnimatePresence>
+        </main>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

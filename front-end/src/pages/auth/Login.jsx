@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import schoolifyLogo from "../../assets/schoolify_logo_transparent (1).png";
 import "./Login.css";
 import LogoLoader from "../../components/Loader/Loader";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { FaGraduationCap, FaChalkboardTeacher, FaUserTie, FaSchool } from "react-icons/fa";
+
+const API_BASE_URL = "http://localhost:5150/api";
 
 const staggerContainer = {
     initial: {},
@@ -20,6 +27,8 @@ const fadeInUp = {
 };
 
 export default function Login({ onSwitch }) {
+    const navigate = useNavigate();
+    const { handleLogin, user, isLoading } = useAuth();
     const [form, setForm] = useState({ email: "", password: "" });
     const [showPassword, setShowPassword] = useState(false);
     const [touched, setTouched] = useState({});
@@ -29,20 +38,63 @@ export default function Login({ onSwitch }) {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
+    useEffect(() => {
+        if (!isLoading && user) {
+            if (user.role === 'school') navigate(`/school/${user.id}`);
+            else if (user.role === 'system_admin') navigate('/admin/verify-schools');
+            else navigate('/listSchool');
+        }
+    }, [user, isLoading, navigate]);
+
     const handleBlur = (e) => {
         setTouched((prev) => ({ ...prev, [e.target.name]: true }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        console.log("Login Attempt:", form);
 
-        // Simulate API call
-        setTimeout(() => {
+        try {
+            const accountType = form.role === 'school' ? 'school' : 'user';
+
+            const response = await axios.post(`${API_BASE_URL}/auth/sign-in`, {
+                email: form.email,
+                password: form.password,
+                accountType
+            });
+            const userData = response.data.data;
+            const currentToken = response.data.data.token;
+
+            // If we successfully get data, check role
+            if (userData) {
+                if (userData.role === 'system_admin') {
+                    toast.error("Admins cannot login here. Use the dedicated admin portal.");
+                    setLoading(false);
+                    return;
+                }
+
+                if (userData.role !== form.role) {
+                    toast.error(`Invalid credentials. This account appears to be registered as a ${userData.role.replace('_', ' ')}.`);
+                    setLoading(false);
+                    return;
+                }
+
+                handleLogin(userData, currentToken);
+                toast.success("Welcome back!");
+
+                if (userData.role === 'school') {
+                    navigate(`/school/${userData.id}`);
+                } else {
+                    navigate('/listSchool');
+                }
+            }
+        } catch (error) {
+            console.error("Login Attempt Failed:", error);
+            const msg = error.response?.data?.message || "Invalid email or password.";
+            toast.error(msg);
+        } finally {
             setLoading(false);
-            alert("Check console for login data. Role will be fetched from backend later.");
-        }, 1500);
+        }
     };
 
     if (loading) return <LogoLoader />;
@@ -91,6 +143,44 @@ export default function Login({ onSwitch }) {
                     initial="initial"
                     animate="animate"
                 >
+                    <motion.div className="field-group" variants={fadeInUp}>
+                        <label htmlFor="role" className="field-label">Account Role</label>
+                        <div className="role-selector-grid">
+                            <button
+                                type="button"
+                                className={`role-card ${form.role === 'student' ? 'active' : ''}`}
+                                onClick={() => setForm({ ...form, role: 'student' })}
+                            >
+                                <FaGraduationCap className="role-icon" />
+                                <span>Student</span>
+                            </button>
+                            <button
+                                type="button"
+                                className={`role-card ${form.role === 'teacher' ? 'active' : ''}`}
+                                onClick={() => setForm({ ...form, role: 'teacher' })}
+                            >
+                                <FaChalkboardTeacher className="role-icon" />
+                                <span>Teacher</span>
+                            </button>
+                            <button
+                                type="button"
+                                className={`role-card ${form.role === 'head_teacher' ? 'active' : ''}`}
+                                onClick={() => setForm({ ...form, role: 'head_teacher' })}
+                            >
+                                <FaUserTie className="role-icon" />
+                                <span>Manager</span>
+                            </button>
+                            <button
+                                type="button"
+                                className={`role-card ${form.role === 'school' ? 'active' : ''}`}
+                                onClick={() => setForm({ ...form, role: 'school' })}
+                            >
+                                <FaSchool className="role-icon" />
+                                <span>School</span>
+                            </button>
+                        </div>
+                    </motion.div>
+
                     <motion.div className={`field-group ${touched.email && !isEmailValid ? "field-error" : ""}`} variants={fadeInUp}>
                         <label htmlFor="email" className="field-label">Email Address</label>
                         <div className="field-input-wrap">
@@ -182,7 +272,7 @@ export default function Login({ onSwitch }) {
                 </motion.form>
 
                 <motion.div className="auth-switch" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
-                    Don't have an account? <button onClick={onSwitch}>Create account</button>
+                    Don't have an account? <button onClick={onSwitch}>Create School</button>
                 </motion.div>
 
                 <p className="login-footer">

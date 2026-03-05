@@ -7,6 +7,9 @@ import {
 } from 'react-icons/fa';
 import schoolifyLogo from '../../assets/schoolify_logo_transparent (1).png';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import LogoLoader from '../../components/Loader/Loader';
 import './Home.css';
 
 /* ══════════════════════════════════════════════════════════════
@@ -213,6 +216,17 @@ const scrollFadeUp = (delay = 0) => ({
    HOME COMPONENT
    ══════════════════════════════════════════════════════════════ */
 export default function Home({ onJoin }) {
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      if (user.role === 'school') navigate(`/school/${user.id}`);
+      else if (user.role === 'system_admin') navigate('/admin/verify-schools');
+      else navigate('/listSchool');
+    }
+  }, [user, isLoading, navigate]);
+
   const stats = [
     { value: '50000', display: '50K+', label: 'Students Managed' },
     { value: '1200', display: '1,200+', label: 'Schools Connected' },
@@ -227,6 +241,8 @@ export default function Home({ onJoin }) {
     { initial: 'M', name: 'Mohamed Ahmed', role: 'Back-end Engineer' },
     { initial: 'R', name: 'Reda', role: 'Back-end Engineer' },
   ];
+
+  if (isLoading) return <LogoLoader />;
 
   return (
     <div className="sc-home">
@@ -294,7 +310,7 @@ export default function Home({ onJoin }) {
       </section>
 
       {/* ═══════ FEATURES BENTO ════════════════════════════ */}
-      <section className="sc-features">
+      {/* <section className="sc-features">
         <div className="sc-container">
           <motion.div className="sc-section-head" {...scrollFadeUp(0)}>
             <span className="sc-section-tag"><FaBolt /> Core Platform</span>
@@ -349,10 +365,10 @@ export default function Home({ onJoin }) {
             </motion.div>
           </motion.div>
         </div>
-      </section>
+      </section>*/}
 
       {/* ═══════ HOW IT WORKS ══════════════════════════════ */}
-      <section className="sc-how">
+      {/* <section className="sc-how">
         <div className="sc-container">
           <motion.div className="sc-section-head" {...scrollFadeUp(0)}>
             <span className="sc-section-tag"><FaUsers /> Workflow</span>
@@ -380,7 +396,7 @@ export default function Home({ onJoin }) {
             ))}
           </motion.div>
         </div>
-      </section>
+      </section>*/}
 
       {/* ═══════ TEAM ═════════════════════════════════════ */}
       <section className="sc-team">

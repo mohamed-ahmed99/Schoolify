@@ -1,0 +1,203 @@
+commit 236483738bd2ef383b84c7542a7c941d4f9f0b22
+Author: Mohamed <masmhdmas@gmail.com>
+Date:   Wed Mar 4 06:34:12 2026 +0200
+
+    get not actived schools and active them
+
+diff --git a/back-end/src/app.js b/back-end/src/app.js
+index 8b57b18..599c29d 100644
+--- a/back-end/src/app.js
++++ b/back-end/src/app.js
+@@ -10,6 +10,7 @@ import authRoutes from './routes/auth.routes.js'
+ import developmentRoutes from './routes/development.routes.js'
+ import schoolRoutes from './routes/schools.routes.js'
+ import usersRoutes from './routes/users.routes.js'
++import adminRoutes from './routes/admin.routes.js'
+ 
+ const app = express()
+ 
+@@ -59,6 +60,7 @@ app.use("/api/auth", authRoutes)
+ app.use("/api/dev", developmentRoutes)
+ app.use("/api/schools", schoolRoutes)
+ app.use("/api/users", usersRoutes)
++app.use("/api/admin", adminRoutes)
+ 
+ // not found routes
+ app.use((req, res) => {
+diff --git a/back-end/src/controllers/admin.controller.js b/back-end/src/controllers/admin.controller.js
+new file mode 100644
+index 0000000..84eaf8d
+--- /dev/null
++++ b/back-end/src/controllers/admin.controller.js
+@@ -0,0 +1,40 @@
++import asyncHandler from "../middleware/asyncHandler.js";
++import Schools from "../models/School.model.js";
++
++
++export const getNotVerifiedSchools = asyncHandler(async (req, res) => {
++    // get all schools that are not verified
++    const { page = 1, limit = 10 } = req.query
++
++    // get the schools
++    const schools = await Schools.find({ isActive: false, isVerified: true })
++    .sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).select("-verification")
++
++    // return the schools
++    return res.status(200).json({
++        status: "success",
++        message: "Not verified schools found successfully",
++        data: { count: schools.length, schools }
++    });
++})
++
++export const verifySchool = asyncHandler(async (req, res) => {
++    // get the school
++    const school = await Schools.findById(req.params.id)
++
++    // check if school exists and is not verified and not active
++    if (!school) return res.status(404).json({ status: "fail", message: "School not found", data: null });
++    if (school.isActive) return res.status(400).json({ status: "fail", message: "School already active", data: null });
++    if (!school.isVerified) return res.status(400).json({ status: "fail", message: "School not verified", data: null });
++
++    // verify the school
++    school.isActive = true
++    await school.save()
++
++    // return the school
++    return res.status(200).json({
++        status: "success",
++        message: "School verified successfully",
++        data: {id: school.id}
++    });
++})
+\ No newline at end of file
+diff --git a/back-end/src/models/School.model.js b/back-end/src/models/School.model.js
+index f8f1e2e..bb7afa5 100644
+--- a/back-end/src/models/School.model.js
++++ b/back-end/src/models/School.model.js
+@@ -50,7 +50,7 @@ const schoolSchema = new mongoose.Schema({
+     enum: ["primary", "preparatory", "secondary", "all"]
+   },
+ 
+-  isActive: { type: Boolean, default: true },
++  isActive: { type: Boolean, default: false },
+   isVerified: { type: Boolean, default: false },
+ 
+ 
+diff --git a/back-end/src/routes/admin.routes.js b/back-end/src/routes/admin.routes.js
+new file mode 100644
+index 0000000..45b5bdd
+--- /dev/null
++++ b/back-end/src/routes/admin.routes.js
+@@ -0,0 +1,15 @@
++import { Router } from "express";
++import { checkAuth } from "../middleware/checkAuth.js";
++import { ROLES } from "../utils/constants.js";
++import { getNotVerifiedSchools, verifySchool } from "../controllers/admin.controller.js";
++
++
++const adminRoutes = Router()
++
++adminRoutes.get("/not-verified-schools", checkAuth([ROLES.SYSTEM_ADMIN]), getNotVerifiedSchools)
++adminRoutes.patch("/verify-school/:id", checkAuth([ROLES.SYSTEM_ADMIN]), verifySchool)
++
++
++
++
++export default adminRoutes
+\ No newline at end of file
+
+commit 2e8a6b69a48abae742640ee4654294b6fb5736fb
+Author: Mohamed <masmhdmas@gmail.com>
+Date:   Wed Mar 4 05:52:24 2026 +0200
+
+    verify-token
+
+diff --git a/back-end/src/controllers/auth.controller.js b/back-end/src/controllers/auth.controller.js
+index 7a8a4ec..68a79c4 100644
+--- a/back-end/src/controllers/auth.controller.js
++++ b/back-end/src/controllers/auth.controller.js
+@@ -170,3 +170,17 @@ export const signIn = asyncHandler(async (req, res) => {
+         return res.status(400).json({ status: "fail", message: "Invalid account type", data: null });
+     }
+ })
++
++
++// verify me
++export const verifyMe = asyncHandler(async (req, res) => {
++    const user = await Users.findById(req.user.id).select("-verification");
++    if (!user) {
++        return res.status(404).json({ status: "fail", message: "User not found", data: null });
++    }
++    return res.status(200).json({
++        status: "success",
++        message: "User verified successfully",
++        data: { id: user._id, email: user.contact.email, role: user.account.role, personalInfo: user.personalInfo, school: user.school }
++    });
++})
+\ No newline at end of file
+diff --git a/back-end/src/middleware/checkAuth.js b/back-end/src/middleware/checkAuth.js
+index 25bb0b7..2338d01 100644
+--- a/back-end/src/middleware/checkAuth.js
++++ b/back-end/src/middleware/checkAuth.js
+@@ -3,7 +3,7 @@ import asyncHandler from "./asyncHandler.js";
+ import Sessions from "../models/Sessions.model.js";
+ import { ROLES } from "../utils/constants.js";
+ 
+-const checkAuth = (allowedRoles = []) => {
++export const checkAuth = (allowedRoles = []) => {
+     return asyncHandler(async (req, res, next) => {
+         let token;
+ 
+@@ -19,10 +19,9 @@ const checkAuth = (allowedRoles = []) => {
+         try {
+             // 2. Verify token
+             const decoded = jwt.verify(token, process.env.JWT_SECRET);
+-            console.log(decoded);
+ 
+             // 3. Check if session exists in DB
+-            const session = await Sessions.findOne({ token });
++            const session = await Sessions.findOne({user: decoded.id });
+             if (!session) {
+                 return res.status(401).json({ status: "fail", message: "Session expired or invalid. Please sign in again.", data: null });
+             }
+@@ -53,4 +52,3 @@ const checkAuth = (allowedRoles = []) => {
+     });
+ };
+ 
+-export default checkAuth;
+diff --git a/back-end/src/routes/auth.routes.js b/back-end/src/routes/auth.routes.js
+index 8ea33bf..ab94b18 100644
+--- a/back-end/src/routes/auth.routes.js
++++ b/back-end/src/routes/auth.routes.js
+@@ -1,5 +1,6 @@
+ import { Router } from "express";
+-import { verifyEmail, signIn } from "../controllers/auth.controller.js";
++import { verifyEmail, signIn, verifyMe } from "../controllers/auth.controller.js";
++import { checkAuth } from "../middleware/checkAuth.js";
+ 
+ const authRoutes = Router()
+ 
+@@ -8,5 +9,8 @@ authRoutes.post("/verify-email", verifyEmail)
+ authRoutes.post("/sign-in", signIn)
+ 
+ 
++authRoutes.get("/verify-me", checkAuth(), verifyMe)
++
++
+ 
+ export default authRoutes
+\ No newline at end of file
+diff --git a/back-end/src/routes/schools.routes.js b/back-end/src/routes/schools.routes.js
+index 88a0f17..e8bb378 100644
+--- a/back-end/src/routes/schools.routes.js
++++ b/back-end/src/routes/schools.routes.js
+@@ -1,7 +1,7 @@
+ 
+ import { Router } from "express";
+ import { createSchool, getSchoolById, getSchools } from "../controllers/school.controller.js";
+-import checkAuth from "../middleware/checkAuth.js";
++import {checkAuth} from "../middleware/checkAuth.js";
+ import { ROLES } from "../utils/constants.js";
+ 
+ 

@@ -174,13 +174,26 @@ export const signIn = asyncHandler(async (req, res) => {
 
 // verify me
 export const verifyMe = asyncHandler(async (req, res) => {
-    const user = await Users.findById(req.user.id).select("-verification");
-    if (!user) {
-        return res.status(404).json({ status: "fail", message: "User not found", data: null });
+    // Note: We MUST handle 'school' role separately, because schools are saved in the `Schools` collection, NOT the `Users` collection!
+    if (req.user.role === 'school') {
+        const school = await Schools.findById(req.user.id).select("-verification");
+        if (!school) {
+            return res.status(404).json({ status: "fail", message: "School not found", data: null });
+        }
+        return res.status(200).json({
+            status: "success",
+            message: "School verified successfully",
+            data: { id: school._id, email: school.contact.email, role: school.account.role, name: school.identity.name }
+        });
+    } else {
+        const user = await Users.findById(req.user.id).select("-verification");
+        if (!user) {
+            return res.status(404).json({ status: "fail", message: "User not found", data: null });
+        }
+        return res.status(200).json({
+            status: "success",
+            message: "User verified successfully",
+            data: { id: user._id, email: user.contact.email, role: user.account.role, personalInfo: user.personalInfo, school: user.school }
+        });
     }
-    return res.status(200).json({
-        status: "success",
-        message: "User verified successfully",
-        data: { id: user._id, email: user.contact.email, role: user.account.role, personalInfo: user.personalInfo, school: user.school }
-    });
 })

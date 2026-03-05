@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import {
     FaSchool, FaInfoCircle, FaEnvelope, FaPhone,
     FaGlobe, FaMapMarkerAlt, FaGlobeAmericas, FaCity,
@@ -148,12 +149,12 @@ export default function RegisterSchool() {
             const response = await axios.post(`${API_BASE_URL}/schools/create`, formData.school);
             if (response.data.status === 'success') {
                 setSchoolId(response.data.data.schoolId);
-                alert('School details registered! An email has been sent for verification.');
+                toast.success('School details registered! An email has been sent for verification.');
                 setStep(2);
             }
         } catch (error) {
             console.error('School Creation error:', error);
-            alert(error.response?.data?.message || 'School creation failed. Please try again.');
+            toast.error(error.response?.data?.message || 'School creation failed. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -161,7 +162,7 @@ export default function RegisterSchool() {
 
     const handleVerifySchool = async (e) => {
         e.preventDefault();
-        if (!schoolVerifyCode) return alert('Please enter code');
+        if (!schoolVerifyCode) return toast.error('Please enter code');
         setIsLoading(true);
         try {
             const response = await axios.post(`${API_BASE_URL}/auth/verify-email`, {
@@ -170,12 +171,12 @@ export default function RegisterSchool() {
                 accountType: 'school'
             });
             if (response.data.status === 'success') {
-                alert('School email verified securely!');
+                toast.success('School email verified securely!');
                 setStep(3);
             }
         } catch (error) {
             console.error('School Verification error:', error);
-            alert(error.response?.data?.message || 'School verification failed. Please try again.');
+            toast.error(error.response?.data?.message || 'School verification failed. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -195,12 +196,12 @@ export default function RegisterSchool() {
             };
             const response = await axios.post(`${API_BASE_URL}/users/create`, payload);
             if (response.data.status === 'success') {
-                alert('Manager details registered! An email has been sent to confirm the manager.');
+                toast.success('Manager details registered! An email has been sent to confirm the manager.');
                 setStep(4);
             }
         } catch (error) {
             console.error('Manager Creation error:', error);
-            alert(error.response?.data?.message || 'Manager creation failed. Please try again.');
+            toast.error(error.response?.data?.message || 'Manager creation failed. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -208,7 +209,7 @@ export default function RegisterSchool() {
 
     const handleVerifyManager = async (e) => {
         e.preventDefault();
-        if (!managerVerifyCode) return alert('Please enter code');
+        if (!managerVerifyCode) return toast.error('Please enter code');
         setIsLoading(true);
         try {
             const response = await axios.post(`${API_BASE_URL}/auth/verify-email`, {
@@ -218,12 +219,12 @@ export default function RegisterSchool() {
                 schoolId: schoolId
             });
             if (response.data.status === 'success') {
-                alert('Manager verified successfully! Setup is now complete.');
-                navigate('/login');
+                toast.success('Manager verified successfully! Setup is now complete.');
+                navigate(`/school/${schoolId}`);
             }
         } catch (error) {
             console.error('Manager Verification error:', error);
-            alert(error.response?.data?.message || 'Manager verification failed. Please try again.');
+            toast.error(error.response?.data?.message || 'Manager verification failed. Please try again.');
         } finally {
             setIsLoading(false);
         }

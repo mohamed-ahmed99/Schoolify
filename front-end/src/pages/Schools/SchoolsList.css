@@ -218,7 +218,7 @@
 .sl-view-btn:hover {
     background: var(--accent-primary);
     border-color: var(--accent-primary);
-    color: #fff;
+    color: var(--bg-primary);
 }
 
 /* Loading & Error States */
