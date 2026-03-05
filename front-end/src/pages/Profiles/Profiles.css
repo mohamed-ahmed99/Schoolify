@@ -32,11 +32,11 @@
 }
 
 .teacher-theme {
-    background: linear-gradient(135deg, #3f36f3 0%, #63f1d5 100%);
+    background: linear-gradient(135deg, #030213 0%, #065f4d 100%);
 }
 
 .student-theme {
-    background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+    background: linear-gradient(135deg, #000000 0%, #078372 100%);
 }
 
 .up-header::before {
