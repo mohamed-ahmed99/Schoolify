@@ -113,7 +113,7 @@
     transform: translateY(0);
 }
 
-.dropdown-content button {
+.dropdown-item {
     display: block;
     width: 100%;
     text-align: left;
@@ -128,7 +128,7 @@
     transition: all 0.2s;
 }
 
-.dropdown-content button:hover {
+.dropdown-item:hover {
     background-color: var(--bg-tertiary);
     color: var(--text-primary);
 }
@@ -141,9 +141,9 @@
 }
 
 .btn-join {
-    background: var(--text-primary);
-    color: var(--bg-primary);
-    border: 1px solid var(--text-primary);
+    background: var(--text-primary) !important;
+    color: var(--bg-primary) !important;
+    border: 1px solid var(--text-primary) !important;
     padding: 9px 22px;
     border-radius: 100px;
     font-weight: 700;
@@ -176,6 +176,27 @@
     border-color: var(--accent-primary);
     color: var(--accent-primary);
     transform: rotate(20deg) scale(1.1);
+}
+
+.nav-logout {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary) !important;
+    background: transparent !important;
+    border: none !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 100px;
+}
+
+.nav-logout:hover {
+    color: #ff4757 !important;
+    background-color: rgba(255, 71, 87, 0.1) !important;
+    transform: translateY(-2px);
 }
 
 /* ── Dark mode shadow ──────────────────────────────── */

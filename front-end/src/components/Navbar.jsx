@@ -1,12 +1,14 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
-import { FaSun, FaMoon } from 'react-icons/fa';
+import { FaSun, FaMoon, FaSignOutAlt } from 'react-icons/fa';
 import schoolifyLogo from '../assets/schoolify_logo_transparent (1).png';
+import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
 const Navbar = ({ onNavigate }) => {
     const { theme, toggleTheme } = useTheme();
+    const { user, handleLogout } = useAuth();
 
     return (
         <motion.nav
@@ -34,27 +36,40 @@ const Navbar = ({ onNavigate }) => {
                     <div className="nav-dropdown">
                         <button className="nav-link">Profiles</button>
                         <div className="dropdown-content">
-                            <button onClick={() => onNavigate('profile-owner')}>Owner Profile</button>
-                            <button onClick={() => onNavigate('profile-admin')}>Admin Profile</button>
-                            <button onClick={() => onNavigate('profile-teacher')}>Teacher Profile</button>
-                            <button onClick={() => onNavigate('profile-student')}>Student Profile</button>
-                            <hr style={{ margin: '8px 0', opacity: 0.1 }} />
-                            <button onClick={() => onNavigate('register-school')}>Register School</button>
+                            <button className="dropdown-item" onClick={() => onNavigate('profile-owner')}>Owner Profile</button>
+                            <button className="dropdown-item" onClick={() => onNavigate('profile-admin')}>Admin Profile</button>
+                            <button className="dropdown-item" onClick={() => onNavigate('profile-teacher')}>Teacher Profile</button>
+                            <button className="dropdown-item" onClick={() => onNavigate('profile-student')}>Student Profile</button>
                         </div>
                     </div>
-                    <motion.button className="nav-link" onClick={() => onNavigate('login')} whileHover={{ y: -2 }}>Portal</motion.button>
+                    {!user && (
+                        <motion.button className="nav-link" onClick={() => onNavigate('login')} whileHover={{ y: -2 }}>Login</motion.button>
+                    )}
                 </div>
 
                 {/* Actions */}
                 <div className="navbar-actions">
-                    <motion.button
-                        className="btn-join"
-                        onClick={() => onNavigate('register')}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        Get Started
-                    </motion.button>
+                    {!user ? (
+                        <motion.button
+                            className="btn-join"
+                            onClick={() => onNavigate('register-school')}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            Get Started
+                        </motion.button>
+                    ) : (
+                        <motion.button
+                            className="nav-logout"
+                            onClick={() => {
+                                handleLogout();
+                                onNavigate('home');
+                            }}
+                        >
+                            <FaSignOutAlt />
+                            Logout
+                        </motion.button>
+                    )}
                     <button
                         className="theme-toggle"
                         onClick={toggleTheme}

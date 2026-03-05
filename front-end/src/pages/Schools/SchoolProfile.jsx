@@ -65,7 +65,7 @@ export default function SchoolProfile({ school: initialSchool, onBack }) {
 
     if (!school) return null;
 
-    const { identity, contact, stats, administration } = school;
+    const { identity, contact, stats } = school;
 
     return (
         <div className="sp-page">
@@ -98,7 +98,7 @@ export default function SchoolProfile({ school: initialSchool, onBack }) {
                         <div className="sp-identity">
                             <div className="sp-title-row">
                                 <h1 className="sp-school-name">{identity.name}</h1>
-                                <span className="sp-tag">{administration?.educationalStage || 'General'}</span>
+                                <span className="sp-tag">{school.educationalStage || 'General'}</span>
                             </div>
                             <p className="sp-location">
                                 <FaMapMarkerAlt /> {contact?.address?.street ? `${contact.address.street}, ` : ''}{contact?.address?.city || 'Unknown City'}, {contact?.address?.governorate || ''} {contact?.address?.country || 'Unknown Country'}
@@ -129,8 +129,8 @@ export default function SchoolProfile({ school: initialSchool, onBack }) {
                         <motion.section className="sp-section" variants={fadeUp}>
                             <h2 className="sp-sec-title">Administration</h2>
                             <div className="sp-admin-info">
-                                <p><strong>Educational Stage:</strong> {administration?.educationalStage?.toUpperCase() || 'GENERAL'}</p>
-                                <p><strong>Status:</strong> {administration?.isActive ? '✅ Active' : '❌ Inactive'}</p>
+                                <p><strong>Educational Stage:</strong> {school.educationalStage?.toUpperCase() || 'GENERAL'}</p>
+                                <p><strong>Status:</strong> {school.isActive ? '✅ Active' : '❌ Inactive'}</p>
                                 <p><strong>School Code:</strong> {identity.code}</p>
                             </div>
                         </motion.section>
@@ -142,7 +142,7 @@ export default function SchoolProfile({ school: initialSchool, onBack }) {
                                     <FaBook className="sp-prog-icon" />
                                     <div>
                                         <h3>Curriculum Focus</h3>
-                                        <p>Comprehensive {administration?.educationalStage || 'K-12'} curriculum designed for academic rigour.</p>
+                                        <p>Comprehensive {school.educationalStage || 'K-12'} curriculum designed for academic rigour.</p>
                                     </div>
                                 </motion.div>
                                 <motion.div className="sp-prog-card" whileHover={{ scale: 1.02 }}>
