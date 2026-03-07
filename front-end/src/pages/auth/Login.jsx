@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { FaGraduationCap, FaChalkboardTeacher, FaUserTie, FaSchool } from "react-icons/fa";
+import { FaGraduationCap, FaChalkboardTeacher, FaUserTie, FaSchool, FaUserShield } from "react-icons/fa";
 
 const API_BASE_URL = "http://localhost:5150/api";
 
@@ -67,12 +67,6 @@ export default function Login({ onSwitch }) {
 
             // If we successfully get data, check role
             if (userData) {
-                if (userData.role === 'system_admin') {
-                    toast.error("Admins cannot login here. Use the dedicated admin portal.");
-                    setLoading(false);
-                    return;
-                }
-
                 if (userData.role !== form.role) {
                     toast.error(`Invalid credentials. This account appears to be registered as a ${userData.role.replace('_', ' ')}.`);
                     setLoading(false);
@@ -84,6 +78,8 @@ export default function Login({ onSwitch }) {
 
                 if (userData.role === 'school') {
                     navigate(`/school/${userData.id}`);
+                } else if (userData.role === 'system_admin') {
+                    navigate('/admin/verify-schools');
                 } else {
                     navigate('/listSchool');
                 }
@@ -177,6 +173,15 @@ export default function Login({ onSwitch }) {
                             >
                                 <FaSchool className="role-icon" />
                                 <span>School</span>
+                            </button>
+                            <button
+                                type="button"
+                                className={`role-card ${form.role === 'system_admin' ? 'active' : ''}`}
+                                onClick={() => setForm({ ...form, role: 'system_admin' })}
+                                style={{ gridColumn: "span 2" }}
+                            >
+                                <FaUserShield className="role-icon" />
+                                <span>System Admin</span>
                             </button>
                         </div>
                     </motion.div>

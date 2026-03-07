@@ -15,7 +15,6 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import VerifySchools from "./pages/Admin/VerifySchools";
-import AdminLogin from "./pages/Admin/AdminLogin";
 
 // Simple page variants
 const pageVariants = {
@@ -55,19 +54,18 @@ export default function App() {
     <AuthProvider>
       <ThemeProvider>
         <Toaster position="top-right" />
-        {location.pathname !== '/admin/login' && (
-          <Navbar onNavigate={(page) => {
-            if (page === 'home') navigate('/');
-            else if (page === 'schools') navigate('/listSchool');
-            else if (page === 'register-school') navigate('/register-school');
-            else if (page === 'login') navigate('/login');
-            else if (page === 'register') navigate('/register');
-            else if (page === 'profile-owner') navigate('/profile/owner');
-            else if (page === 'profile-admin') navigate('/profile/admin');
-            else if (page === 'profile-teacher') navigate('/profile/teacher');
-            else if (page === 'profile-student') navigate('/profile/student');
-          }} />
-        )}
+        <Navbar onNavigate={(page) => {
+          if (page === 'home') navigate('/');
+          else if (page === 'schools') navigate('/listSchool');
+          else if (page === 'register-school') navigate('/register-school');
+          else if (page === 'login') navigate('/login');
+          else if (page === 'register') navigate('/register');
+          else if (page === 'profile-owner') navigate('/profile/owner');
+          else if (page === 'profile-admin') navigate('/profile/admin');
+          else if (page === 'profile-teacher') navigate('/profile/teacher');
+          else if (page === 'profile-student') navigate('/profile/student');
+          else if (page === 'admin-dashboard') navigate('/admin/verify-schools');
+        }} />
         <main style={{ minHeight: 'calc(100vh - 70px)', overflowX: 'hidden' }}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -84,7 +82,6 @@ export default function App() {
               <Route path="/profile/student" element={<PageWrapper><StudentProfile /></PageWrapper>} />
 
               {/* Admin Routes */}
-              <Route path="/admin/login" element={<PageWrapper><AdminLogin /></PageWrapper>} />
               <Route path="/admin/verify-schools" element={<PageWrapper><VerifySchools /></PageWrapper>} />
             </Routes>
           </AnimatePresence>

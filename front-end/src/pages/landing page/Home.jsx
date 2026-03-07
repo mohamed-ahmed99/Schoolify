@@ -216,16 +216,10 @@ const scrollFadeUp = (delay = 0) => ({
    HOME COMPONENT
    ══════════════════════════════════════════════════════════════ */
 export default function Home({ onJoin }) {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, handleLogout } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isLoading && user) {
-      if (user.role === 'school') navigate(`/school/${user.id}`);
-      else if (user.role === 'system_admin') navigate('/admin/verify-schools');
-      else navigate('/listSchool');
-    }
-  }, [user, isLoading, navigate]);
+
 
   const stats = [
     { value: '50000', display: '50K+', label: 'Students Managed' },
@@ -269,12 +263,23 @@ export default function Home({ onJoin }) {
           </motion.p>
 
           <motion.div className="sc-hero-actions" {...fadeUp(0.3)}>
-            <button className="sc-btn sc-btn-primary" onClick={() => onJoin('register')}>
-              Get Started <FaArrowRight />
-            </button>
-            <button className="sc-btn sc-btn-ghost" onClick={() => onJoin('login')}>
-              Sign in to your school
-            </button>
+            {!user ? (
+              <>
+                <button className="sc-btn sc-btn-primary" onClick={() => onJoin('register-school')}>
+                  Get Started <FaArrowRight />
+                </button>
+                <button className="sc-btn sc-btn-ghost" onClick={() => onJoin('login')}>
+                  Sign in to your school
+                </button>
+              </>
+            ) : (
+              <button className="sc-btn sc-btn-primary" onClick={() => {
+                handleLogout();
+                navigate('/');
+              }}>
+                Logout <FaArrowRight />
+              </button>
+            )}
           </motion.div>
 
           <motion.div className="sc-proof" {...fadeUp(0.4)}>

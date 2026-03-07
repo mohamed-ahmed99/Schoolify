@@ -42,6 +42,9 @@ const Navbar = ({ onNavigate }) => {
                             <button className="dropdown-item" onClick={() => onNavigate('profile-student')}>Student Profile</button>
                         </div>
                     </div>
+                    {user && user.role === 'system_admin' && (
+                        <motion.button className="nav-link" onClick={() => onNavigate('admin-dashboard')} whileHover={{ y: -2 }}>Admin Dashboard</motion.button>
+                    )}
                     {!user && (
                         <motion.button className="nav-link" onClick={() => onNavigate('login')} whileHover={{ y: -2 }}>Login</motion.button>
                     )}
